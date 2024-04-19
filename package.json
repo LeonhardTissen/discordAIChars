@@ -1,0 +1,13 @@
+{
+  "name": "discordaichars",
+  "version": "1.0.0",
+  "description": "A bot that can switch between models and send AI generated messages via webhooks",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "ollama": "^0.5.0",
+    "sqlite3": "^5.1.7"
+  }
+}
