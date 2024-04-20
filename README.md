@@ -2,6 +2,8 @@
 
 Discord AI Chars is a bot that can switch between models and send AI-generated messages via webhooks. It uses the Ollama library to generate the AI responses.
 
+<video src="https://s.warze.org/discordaichars.mp4" width="640"/>
+
 ## Features
 
 - Switch between different AI models that are created by users
