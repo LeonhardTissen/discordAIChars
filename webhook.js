@@ -29,7 +29,7 @@ export async function getOrCreateWebhook(channel) {
 			id: webhook.id,
 			token: webhook.token,
 			avatar: null,
-			name: null
+			name
 		}));
 
 		console.log(`Webhook created: ${webhook.id}`);
