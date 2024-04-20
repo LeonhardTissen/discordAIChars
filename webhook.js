@@ -23,7 +23,7 @@ export async function getOrCreateWebhook(channel) {
 	} else {
 		// Create webhook
 		const name = Math.random().toString(36).substring(7);
-		webhook = await channel.createWebhook(name);
+		webhook = await channel.createWebhook({name});
 		
 		fs.writeFileSync('webhook.json', JSON.stringify({
 			id: webhook.id,
