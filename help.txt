@@ -1,0 +1,14 @@
+```ansi
+$tCommands:
+- $y{prefix}create$x:$w Create a new model
+- $y{prefix}default$g [name]$x:$w Set the default model for the channel. Not specifying a model will clear the default model
+- $y{prefix}delete$g [name]$x:$w Delete a model, if you own it
+- $y{prefix}list$x:$w List all models
+- $y{prefix}ask$g [name] [prompt]$x:$w Talk to a model directly
+- $y{prefix}clear$g [name]$x:$w Clear the previous messages for a model
+- $y{prefix}help$x:$w Show this message
+- $y{prefix}prompt $g[name] [prompt]$x:$w Shows or edit prompt for a model, if you own it
+- $y{prefix}basemodel$x:$w Show the base model
+
+$pMessages starting with # or _ will be ignored by the AI. It will also ignore any messages while a message is being generated.$w
+```
