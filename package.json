@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "dependencies": {
+    "cluster": "^0.7.7",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "ollama": "^0.5.0",

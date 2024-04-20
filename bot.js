@@ -1,23 +1,10 @@
 import ollama from 'ollama';
-import { ActivityType, Client, GatewayIntentBits, Partials, WebhookClient } from 'discord.js';
+import { WebhookClient } from 'discord.js';
 import 'dotenv/config'
-import sqlite3 from 'sqlite3';
 import fs from 'fs';
-
-
-
-
-
-
-
-
-
-// Database setup
-const db = new sqlite3.Database('database.db');
-
-db.serialize(() => {
-	db.run('CREATE TABLE IF NOT EXISTS models (idname TEXT UNIQUE, displayname, model TEXT, owner TEXT, profile TEXT)');
-});
+import { db } from './db.js';
+import { getHelpMessage } from './help.js';
+import { client } from './client.js';
 
 
 
@@ -28,19 +15,6 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 const BASE_MODEL = process.env.BASE_MODEL;
 const PREFIX = process.env.PREFIX;
 
-const client = new Client({
-	intents: Object.values(GatewayIntentBits),
-	partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember],
-});
-
-
-
-
-// Webhook handling
-async function createWebhook() {
-	const name = Math.random().toString(36).substring(7);
-	return client.channels.cache.get(CHANNEL_ID).createWebhook({name});
-}
 
 
 
@@ -52,17 +26,6 @@ let currentWebhookModel = {
 }
 
 client.once('ready', async () => {
-    console.log('Bot is online!');
-
-	// Set the bot's status
-	client.user.setPresence({ 
-		activities: [{ 
-			name: 'with AI models !help', 
-			type: ActivityType.Playing,
-		}],
-		status: 'online' 
-	});
-
 	if (fs.existsSync('webhook.json')) {
 		// Load webhook from file
 		const webhookFile = fs.readFileSync('webhook.json', 'utf8');
@@ -90,7 +53,6 @@ client.once('ready', async () => {
 
 		console.log(`Webhook created: ${webhook.id}`);
 	}
-	
 
 });
 
@@ -463,16 +425,7 @@ client.on('messageCreate', async (message) => {
 
 
 	if (command === 'help') {
-		// Load help.txt file and send it, replace {prefix} with the actual prefix
-		const helpText = fs.readFileSync('help.txt', 'utf8')
-			.replaceAll("{prefix}", PREFIX)
-			.replaceAll("$w", '[2;37m') // White
-			.replaceAll("$t", '[2;36m') // Teal
-			.replaceAll("$p", '[2;35m') // Pink
-			.replaceAll("$y", '[2;33m') // Yellow
-			.replaceAll("$g", '[2;32m') // Green
-			.replaceAll("$x", '[2;30m') // Gray
-		await message.channel.send(helpText);
+		await message.channel.send(getHelpMessage());
 		return;
 	}
 
@@ -541,4 +494,6 @@ client.on('messageCreate', async (message) => {
 
 });
 
-client.login(BOT_TOKEN);
+export function startBot() {
+	client.login(BOT_TOKEN);
+}
