@@ -355,6 +355,81 @@ client.on('messageCreate', async (message) => {
 	}
 
 
+	if (command === 'info') {
+		const name = restOfMessage;
+
+		if (!name) {
+			await message.channel.send('### Please specify a model to show info');
+			return;
+		}
+
+		const row = await new Promise((resolve, reject) => {
+			db.get('SELECT idname, displayname, owner, model, profile FROM models WHERE idname = ?', [name], (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(row);
+			}
+		)});
+
+		if (!row) {
+			await message.channel.send(`### Model with name "${name}" not found`);
+			return;
+		}
+
+		await message.channel.send(`### Model info for "${row.displayname}":
+- Avatar: ${row.profile}
+- Owner: ${row.owner}
+- Prompt: ${row.model}`);
+		return;
+	}
+
+
+
+	if (command === 'transfer') {
+		// Example: !transfer Ben userid
+		let [name, user] = restOfMessage.split(' ');
+
+		// Remove non-numeric characters from user
+		user = user.replace(/[^0-9]/g, '');
+
+		if (!name || !user) {
+			await message.channel.send('### Please specify a model and a user to transfer ownership');
+			return;
+		}
+
+		// Check if owner
+		const row = await new Promise((resolve, reject) => {
+			db.get('SELECT owner FROM models WHERE idname = ?', [name], (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(row);
+			}
+		)});
+
+		if (!row) {
+			await message.channel.send(`### Model with name "${name}" not found`);
+			return;
+		}
+
+		if (row.owner !== message.author.id) {
+			await message.channel.send(`### You do not own the model with the name "${name}"`);
+			return;
+		}
+
+		// Transfer ownership
+		db.run('UPDATE models SET owner = ? WHERE idname = ?', [user, name], async (err) => {
+			if (err) {
+				console.error(err);
+				return;
+			}
+
+			await message.channel.send(`### Model "${name}" transferred to <@${user}>, they are now the owner`);
+		});
+	}
 
 
 	if (command === 'ask') {
