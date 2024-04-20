@@ -29,7 +29,7 @@ async function talkToModel(name, prompt, message) {
 	
 	// Find webhook by name
 	const row = await new Promise((resolve, reject) => {
-		db.get('SELECT model, profile, displayname FROM models WHERE idname = ?', [name], (err, row) => {
+		db.get('SELECT idname, model, profile, displayname FROM models WHERE idname = ?', [name], (err, row) => {
 			if (err) {
 				reject(err);
 				return;
@@ -84,7 +84,7 @@ async function talkToModel(name, prompt, message) {
 	});
 
 	// Previous messages the AI & user have sent
-	previousMessages[name]?.forEach((message) => {
+	previousMessages[row.idname]?.forEach((message) => {
 		messages.push(message);
 	});
 
@@ -129,11 +129,11 @@ async function talkToModel(name, prompt, message) {
 	process.stdout.write('\n');
 
 	// Save the previous messages (Ensure the array exists)
-	if (!previousMessages[row.id]) {
-		previousMessages[row.id] = [];
+	if (!previousMessages[row.idname]) {
+		previousMessages[row.idname] = [];
 	}
 
-	previousMessages[row.id].push({
+	previousMessages[row.idname].push({
 		role: 'user',
 		content: prompt,
 	}, {
