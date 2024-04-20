@@ -13,6 +13,7 @@ $tCommands for interacting with models
 - $y$!ask$g [name] [prompt]$x:$w Talk to a model directly
 - $y$!clear$g [name] [amount?]$x:$w Clear the previous messages for a model, if not amount is specified, it will clear all messages
 - $y$!default$g [name]$x:$w Set the default model for the channel. Not specifying a model will clear the default model
+- $y$!temperature$g [0-1] $x:$w Set the temperature for the models
 
 $tOther commands
 - $y$!help$x:$w Show this message

@@ -1,4 +1,7 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
+import dotenv from 'dotenv';
+
+const PREFIX = process.env.PREFIX;
 
 export const client = new Client({
 	intents: Object.values(GatewayIntentBits),
@@ -11,7 +14,7 @@ client.once('ready', async () => {
 	// Set the bot's status
 	client.user.setPresence({ 
 		activities: [{ 
-			name: 'with AI models !help', 
+			name: `with AI models ${PREFIX}help`, 
 			type: ActivityType.Playing,
 		}],
 		status: 'online' 

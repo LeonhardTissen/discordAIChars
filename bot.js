@@ -15,6 +15,7 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 const BASE_MODEL = process.env.BASE_MODEL;
 const PREFIX = process.env.PREFIX;
 let channel = null;
+let modelTemperature = 0.8;
 
 client.once('ready', async () => {
 	channel = client.channels.cache.get(CHANNEL_ID);
@@ -101,6 +102,7 @@ async function talkToModel(name, prompt, message) {
 		stream: true,
 		options: {
 			num_predict: 500,
+			temperature: modelTemperature,
 		}
 	});
 	let result = '';
@@ -247,6 +249,19 @@ client.on('messageCreate', async (message) => {
 			previousMessages[model] = previousMessages[model].slice(0, -num * 2);
 			await message.channel.send(`### Last ${num} messages cleared for model "${model}"`);
 		}
+		return;
+	}
+
+	if (command === 'temperature') {
+		const temp = parseFloat(restOfMessage);
+
+		if (isNaN(temp) || temp < 0 || temp > 1) {
+			await message.channel.send('### Please specify a temperature between 0 and 1');
+			return;
+		}
+
+		modelTemperature = temp;
+		await message.channel.send(`### Model temperature set to ${temp}`);
 		return;
 	}
 

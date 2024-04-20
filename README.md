@@ -22,6 +22,7 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 - `!default [name]`: Set the default model for the channel. Not specifying a model will clear the default model
 - `!help`: Show the help message
 - `!basemodel`: Show the base model
+- `!temperature [0-1]`: Set the temperature for the models
 
 ## Requirements
 
