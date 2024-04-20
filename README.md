@@ -30,8 +30,8 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 
 1. Clone the repository
 2. Install the dependencies with `npm install`
-3. Copy [``example.env``] to [``.env``] and fill in the required values
-4. Download the model of your choice from [Ollama](https://ollama.com/library), example: [``ollama run llama3``]
+3. Copy `example.env` to `.env` and fill in the required values
+4. Download the model of your choice from [Ollama](https://ollama.com/library), example: `ollama run llama3`
 5. Run the bot with `node main.js`
 
 ## Contributing
