@@ -453,6 +453,8 @@ client.on('messageCreate', async (message) => {
 
 			await message.channel.send(`### Model "${name}" transferred to <@${user}>, they are now the owner`);
 		});
+
+		return;
 	}
 
 
