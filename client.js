@@ -5,7 +5,7 @@ export const client = new Client({
 	partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember],
 });
 
-client.once('ready', () => {
+client.once('ready', async () => {
     console.log('Bot is online!');
 
 	// Set the bot's status

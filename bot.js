@@ -1,76 +1,25 @@
 import ollama from 'ollama';
-import { WebhookClient } from 'discord.js';
 import 'dotenv/config'
 import fs from 'fs';
+
 import { db } from './db.js';
 import { getHelpMessage } from './help.js';
 import { client } from './client.js';
-
-
-
+import { isIgnored } from './ignore.js';
+import { filterOutput } from './filter.js';
+import { currentWebhookModel, getOrCreateWebhook, webhook } from './webhook.js';
 
 // Discord bot setup
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BASE_MODEL = process.env.BASE_MODEL;
 const PREFIX = process.env.PREFIX;
-
-
-
-
-
-let webhook = null
-let currentWebhookModel = {
-	name: null,
-	avatar: null,
-}
+let channel = null;
 
 client.once('ready', async () => {
-	if (fs.existsSync('webhook.json')) {
-		// Load webhook from file
-		const webhookFile = fs.readFileSync('webhook.json', 'utf8');
-		const webhookData = JSON.parse(webhookFile);
-		webhook = new WebhookClient({
-			id: webhookData.id,
-			token: webhookData.token
-		});
-		currentWebhookModel.name = webhookData.name;
-		currentWebhookModel.avatar = webhookData.avatar;
-
-		console.log(`Webhook loaded: ${webhook.id}`);
-	} else {
-		// Create webhook
-		const name = Math.random().toString(36).substring(7);
-		const createdWebhook = await client.channels.cache.get(CHANNEL_ID).createWebhook(name);
-		
-		webhook = createdWebhook;
-		fs.writeFileSync('webhook.json', JSON.stringify({
-			id: webhook.id,
-			token: webhook.token,
-			avatar: null,
-			name: null
-		}));
-
-		console.log(`Webhook created: ${webhook.id}`);
-	}
-
+	channel = client.channels.cache.get(CHANNEL_ID);
+	await getOrCreateWebhook(channel);
 });
-
-
-// Prevent messages from going into the AI if they start with # or _
-function isIgnored(message) {
-	return message.startsWith('#') || message.startsWith('_') || message.length === 0;
-}
-
-
-// Filter out mentions and other unwanted content
-function filterOutput(output) {
-	return output
-		.replace(/<@!?[0-9]+>/g, '')
-		.replace(/@everyone/g, '')
-		.replace(/@here/g, '')
-		.slice(0, 2000 - messageCursor.length);
-}
 
 
 async function talkToModel(name, prompt, message) {
@@ -211,7 +160,7 @@ client.on('messageCreate', async (message) => {
 	if (message.author.bot) return;
 
 	// Prevent bot from responding to messages in other channels
-	if (message.channel.id !== CHANNEL_ID) return;
+	if (message.channel !== channel) return;
 
 	let command = null;
 	let restOfMessage = null;
