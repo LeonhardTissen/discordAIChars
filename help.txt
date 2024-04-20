@@ -2,7 +2,7 @@
 $tCommands for managing models
 - $y$!create$x:$w Create a new model
 - $y$!delete$g [name]$x:$w Delete a model, if you own it
-- $y$!prompt $g[name] [prompt]$x:$w Shows or edit prompt for a model, if you own it
+- $y$!prompt $g[name] [prompt?]$x:$w Shows or edit prompt for a model, if you own it
 - $y$!transfer$g [name] [user]$x:$w Transfer ownership of a model to another user
 
 $tCommands for browsing models
@@ -11,7 +11,7 @@ $tCommands for browsing models
 
 $tCommands for interacting with models
 - $y$!ask$g [name] [prompt]$x:$w Talk to a model directly
-- $y$!clear$g [name]$x:$w Clear the previous messages for a model
+- $y$!clear$g [name] [amount?]$x:$w Clear the previous messages for a model, if not amount is specified, it will clear all messages
 - $y$!default$g [name]$x:$w Set the default model for the channel. Not specifying a model will clear the default model
 
 $tOther commands

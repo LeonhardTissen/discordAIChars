@@ -184,9 +184,25 @@ client.on('messageCreate', async (message) => {
 		// Example: !default Ben
 		const model = restOfMessage;
 
+		
 		if (model === '') {
 			defaultChannelModel = null;
 			await message.channel.send('### Default model cleared');
+			return;
+		}
+
+		const row = await new Promise((resolve, reject) => {
+			db.get('SELECT idname FROM models WHERE idname = ?', [model], (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(row);
+			})
+		});
+
+		if (!row) {
+			await message.channel.send(`### Model with name "${model}" not found`);
 			return;
 		}
 
@@ -196,29 +212,46 @@ client.on('messageCreate', async (message) => {
 	}
 
 	if (command === 'clear') {
-		const model = restOfMessage;
+		const [model, amount] = restOfMessage.split(' ');
 
 		if (model === '') {
 			await message.channel.send('### Please specify a model to clear');
 			return;
 		}
 
-		db.get('SELECT idname FROM models WHERE idname = ?', [model], async (err, row) => {
-			if (err) {
-				console.error(err);
-				return;
-			}
-
-			if (!row) {
-				await message.channel.send(`### Model with name "${model}" not found`);
-				return;
-			}
-
-			const messagesClearedCount = previousMessages[row.idname]?.length || 0;
-
-			previousMessages[row.idname] = [];
-			await message.channel.send(`### Messages for model "${model}" cleared (\`${messagesClearedCount}\` messages deleted)`);
+		const row = await new Promise((resolve, reject) => {
+			db.get('SELECT idname FROM models WHERE idname = ?', [model], (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(row);
+			})
 		});
+
+		if (!row) {
+			await message.channel.send(`### Model with name "${model}" not found`);
+			return;
+		}
+
+		if (!amount) {
+			previousMessages[model] = [];
+			await message.channel.send(`### Chat history for model "${model}" cleared`);
+		} else {
+			const num = parseInt(amount);
+			if (isNaN(num)) {
+				await message.channel.send('### Please specify a valid number of messages to clear');
+				return;
+			}
+
+			previousMessages[model] = previousMessages[model].slice(0, -num * 2);
+			await message.channel.send(`### Last ${num} messages cleared for model "${model}"`);
+		}
+		return;
+	}
+
+	if (command === 'debug') {
+		console.log(previousMessages);
 		return;
 	}
 
@@ -233,7 +266,7 @@ client.on('messageCreate', async (message) => {
 
 		// Find webhook by name
 		const row = await new Promise((resolve, reject) => {
-			db.get('SELECT id, owner FROM models WHERE idname = ?', [name], (err, row) => {
+			db.get('SELECT idname, owner FROM models WHERE idname = ?', [name], (err, row) => {
 				if (err) {
 					reject(err);
 					return;
@@ -252,17 +285,8 @@ client.on('messageCreate', async (message) => {
 			return;
 		}
 
-		// Delete webhook
-		const webhook = await getWebhook(row.id);
-		if (!webhook) {
-			await message.channel.send('### Webhook not found. It may have been deleted already.');
-			return;
-		}
-
-		await webhook.delete();
-
 		// Delete model from database
-		db.run('DELETE FROM models WHERE id = ?', [row.id]);
+		db.run('DELETE FROM models WHERE idname = ?', [row.idname]);
 
 		await message.channel.send(`### Model with name "${name}" deleted`);
 
