@@ -1,15 +1,16 @@
 import { WebhookClient } from 'discord.js';
 import fs from 'fs';
+import { channel } from './channel.js';
 
 export let webhook = null
 export let currentWebhookModel = {
-	name: null,
+	displayName: null,
 	avatar: null,
 }
 
 const webhookFilePath = 'webhook.json';
 
-export async function getOrCreateWebhook(channel) {
+export async function getOrCreateWebhook() {
 	if (fs.existsSync(webhookFilePath)) {
 		// Load webhook from file
 		const webhookFile = fs.readFileSync(webhookFilePath, 'utf8');
@@ -18,7 +19,7 @@ export async function getOrCreateWebhook(channel) {
 			id: webhookData.id,
 			token: webhookData.token
 		});
-		currentWebhookModel.name = webhookData.name;
+		currentWebhookModel.displayName = webhookData.displayName;
 		currentWebhookModel.avatar = webhookData.avatar;
 
 		console.log(`Webhook loaded: ${webhook.id}`);

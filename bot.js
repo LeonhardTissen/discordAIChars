@@ -1,164 +1,26 @@
-import ollama from 'ollama';
 import 'dotenv/config'
-import fs from 'fs';
 
 import { db } from './src/db.js';
 import { getHelpMessage } from './src/help.js';
 import { client } from './src/client.js';
 import { isIgnored } from './src/ignore.js';
-import { filterOutput } from './src/filter.js';
-import { currentWebhookModel, getOrCreateWebhook, webhook } from './src/webhook.js';
-import { displaySettings, getParameters, resetSettings, settings, updateSetting } from './src/settings.js';
+import { getOrCreateWebhook } from './src/webhook.js';
+import { displaySettings, resetSettings, updateSetting } from './src/settings.js';
+import { previousMessages, talkToModel } from './src/ollama.js';
+import { channel, setChannel } from './src/channel.js';
 
 // Discord bot setup
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHANNEL_ID = process.env.CHANNEL_ID;
 const BASE_MODEL = process.env.BASE_MODEL;
 const PREFIX = process.env.PREFIX;
-let channel = null;
 
 client.once('ready', async () => {
-	channel = client.channels.cache.get(CHANNEL_ID);
-	await getOrCreateWebhook(channel);
+	setChannel(client.channels.cache.get(CHANNEL_ID));
+	await getOrCreateWebhook();
 });
 
-
-async function talkToModel(name, prompt, message) {
-	if (isGenerating && !settings.simultaneous_messages) {
-		return;
-	}
-	
-	// Find webhook by name
-	const row = await new Promise((resolve, reject) => {
-		db.get('SELECT idname, model, profile, displayname FROM models WHERE idname = ?', [name], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		}
-	)});
-
-	// Check if model exists
-	if (!row) {
-		await message.channel.send(`Model with name "${name}" not found`);
-		return;
-	}
-
-	if (row.avatar !== currentWebhookModel.avatar || row.displayname !== currentWebhookModel.name) {
-		// Update webhook
-		await webhook.edit({
-			name: row.displayname,
-			avatar: row.profile,
-		});
-
-		currentWebhookModel.name = row.displayname;
-		currentWebhookModel.avatar = row.avatar;
-
-		// Save webhook info to file
-		fs.writeFileSync('webhook.json', JSON.stringify({
-			id: webhook.id,
-			token: webhook.token,
-			avatar: row.profile,
-			name: row.displayname,
-		}));
-	}
-
-	// Lock out new messages from being processed while generating
-	isGenerating = true;
-
-	// Initialize webhook message for editing during generation
-	const webhookMessage = await webhook.send(messageCursor);
-
-	// Log the prompt
-	console.log(`${message.author.username}: ${prompt}`);
-	process.stdout.write(`${name}: `);
-
-
-	// Add the previous messages to the model
-	const messages = [];
-
-	// System message
-	messages.push({
-		role: 'system',
-		content: row.model,
-	});
-
-	// Previous messages the AI & user have sent
-	previousMessages[row.idname]?.forEach((message) => {
-		messages.push(message);
-	});
-
-	// New message from the user
-	messages.push({
-		role: 'user',
-		content: prompt,
-	});
-
-	try {
-		// Send the previous messages to the model
-		const response = await ollama.chat({ 
-			model: BASE_MODEL, 
-			messages,
-			stream: true,
-			options: getParameters()
-		});
-		let result = '';
-	
-	
-		// Update the message with the model's responses every second
-		const interval = setInterval(() => {
-			webhook.editMessage(webhookMessage.id, { 
-				content: filterOutput(result) + messageCursor,
-			});
-		}, messageUpdateInterval);
-	
-		// Update the final result with the model's responses
-		for await (const part of response) {
-			if (!part.message || !part.message.content) continue;
-	
-			result += part.message.content;
-	
-			process.stdout.write(part.message.content);
-		}
-	
-		clearInterval(interval);
-	
-		await webhook.editMessage(webhookMessage.id, { content: filterOutput(result) });
-	
-		process.stdout.write('\n');
-	
-		// Save the previous messages (Ensure the array exists)
-		if (!previousMessages[row.idname]) {
-			previousMessages[row.idname] = [];
-		}
-	
-		previousMessages[row.idname].push({
-			role: 'user',
-			content: prompt,
-		}, {
-			role: 'assistant',
-			content: result,
-		});
-	
-		isGenerating = false;
-	} catch (err) {
-		console.error(err);
-		await message.channel.send(`### ${name} tragically died while generating a response.\n\n\`${err.message}\``);
-		isGenerating = false;
-	}
-	return;
-}
-
-
-
 let pendingMessages = [];
-let previousMessages = {};
-let defaultChannelModel = null;
-let isGenerating = false;
-
-const messageUpdateInterval = 1000; // in ms
-const messageCursor = '▌';
 
 client.on('messageCreate', async (message) => {
 	// Prevent bot from responding to itself
@@ -171,7 +33,7 @@ client.on('messageCreate', async (message) => {
 	let restOfMessage = null;
 	if (message.content.startsWith(PREFIX)) {
 		command = message.content.split(' ')[0].replace(PREFIX, '');
-		restOfMessage = message.content.replace(`${PREFIX}${command}`, '').trim();
+		restOfMessage = message.content.replace(PREFIX + command, '').trim();
 	};
 
 	if (command === 'create') {
@@ -444,6 +306,7 @@ client.on('messageCreate', async (message) => {
 
 			await message.channel.send(`### Avatar for model "${name}" updated`);
 		});
+		return;
 	}
 
 
@@ -528,10 +391,10 @@ client.on('messageCreate', async (message) => {
 
 	if (command === 'ask') {
 		// Example: !ask Ben What is the capital of France?
-		const [name, ...prompt] = restOfMessage.split(' ');
+		const [modelName, ...prompt] = restOfMessage.split(' ');
 		const promptString = prompt.join(' ');
 
-		talkToModel(name, promptString, message);
+		talkToModel(promptString, modelName);
 		return;
 	}
 
@@ -611,7 +474,7 @@ client.on('messageCreate', async (message) => {
 
 	// Talk to default model
 	if (defaultChannelModel && !isIgnored(message.content)) {
-		talkToModel(defaultChannelModel, message.content, message);
+		talkToModel(message.content, defaultChannelModel);
 	}
 
 
