@@ -8,6 +8,7 @@ import { client } from './client.js';
 import { isIgnored } from './ignore.js';
 import { filterOutput } from './filter.js';
 import { currentWebhookModel, getOrCreateWebhook, webhook } from './webhook.js';
+import { displaySettings, getParameters, resetSettings, settings, updateSetting } from './settings.js';
 
 // Discord bot setup
 const BOT_TOKEN = process.env.BOT_TOKEN;
@@ -15,7 +16,6 @@ const CHANNEL_ID = process.env.CHANNEL_ID;
 const BASE_MODEL = process.env.BASE_MODEL;
 const PREFIX = process.env.PREFIX;
 let channel = null;
-let modelTemperature = 0.8;
 
 client.once('ready', async () => {
 	channel = client.channels.cache.get(CHANNEL_ID);
@@ -24,7 +24,7 @@ client.once('ready', async () => {
 
 
 async function talkToModel(name, prompt, message) {
-	if (isGenerating) {
+	if (isGenerating && !settings.simultaneous_messages) {
 		return;
 	}
 	
@@ -100,10 +100,7 @@ async function talkToModel(name, prompt, message) {
 		model: BASE_MODEL, 
 		messages,
 		stream: true,
-		options: {
-			num_predict: 500,
-			temperature: modelTemperature,
-		}
+		options: getParameters()
 	});
 	let result = '';
 
@@ -252,16 +249,25 @@ client.on('messageCreate', async (message) => {
 		return;
 	}
 
-	if (command === 'temperature') {
-		const temp = parseFloat(restOfMessage);
+	if (command === 'settings') {
+		const [key, value] = restOfMessage.split(' ');
 
-		if (isNaN(temp) || temp < 0 || temp > 1) {
-			await message.channel.send('### Please specify a temperature between 0 and 1');
+		if (!key) {
+			// No changes requested, display settings
+			await message.channel.send(displaySettings());
 			return;
 		}
 
-		modelTemperature = temp;
-		await message.channel.send(`### Model temperature set to ${temp}`);
+		if (key === 'reset') {
+			resetSettings();
+			await message.channel.send('### Settings reset to default');
+			return;
+		}
+
+		// Update setting may fail if the key or value is invalid, always display the response
+		const response = updateSetting(key, value);
+		await message.channel.send(`### ${response}`);
+
 		return;
 	}
 
