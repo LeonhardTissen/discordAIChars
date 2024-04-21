@@ -56,10 +56,12 @@ function copyDefaultSettings() {
 	return JSON.parse(JSON.stringify(defaultSettings));
 }
 
+const settingsFilePath = 'settings.json';
+
 // Load settings from settings.json if it exists
 export let settings = copyDefaultSettings();
-if (fs.existsSync('settings.json')) {
-	const loadedSettings = JSON.parse(fs.readFileSync('settings.json'));
+if (fs.existsSync(settingsFilePath)) {
+	const loadedSettings = JSON.parse(fs.readFileSync(settingsFilePath));
 	settings = { ...defaultSettings, ...loadedSettings };
 }
 
@@ -92,13 +94,13 @@ export function updateSetting(key, inputString) {
 		} 
 	}
 	settings[key] = value;
-	fs.writeFileSync('settings.json', JSON.stringify(settings));
+	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
 	return `Updated ${key} to ${value}`;
 }
 
 export function resetSettings() {
 	settings = copyDefaultSettings();
-	fs.writeFileSync('settings.json', JSON.stringify(settings));
+	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
 }
 
 export function displaySettings() {
