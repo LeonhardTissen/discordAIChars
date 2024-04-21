@@ -2,13 +2,13 @@ import ollama from 'ollama';
 import 'dotenv/config'
 import fs from 'fs';
 
-import { db } from './db.js';
-import { getHelpMessage } from './help.js';
-import { client } from './client.js';
-import { isIgnored } from './ignore.js';
-import { filterOutput } from './filter.js';
-import { currentWebhookModel, getOrCreateWebhook, webhook } from './webhook.js';
-import { displaySettings, getParameters, resetSettings, settings, updateSetting } from './settings.js';
+import { db } from './src/db.js';
+import { getHelpMessage } from './src/help.js';
+import { client } from './src/client.js';
+import { isIgnored } from './src/ignore.js';
+import { filterOutput } from './src/filter.js';
+import { currentWebhookModel, getOrCreateWebhook, webhook } from './src/webhook.js';
+import { displaySettings, getParameters, resetSettings, settings, updateSetting } from './src/settings.js';
 
 // Discord bot setup
 const BOT_TOKEN = process.env.BOT_TOKEN;

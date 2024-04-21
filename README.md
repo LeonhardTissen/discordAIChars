@@ -19,7 +19,7 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 - `!list`: List all models
 - `!info [name]`: Show info about a model
 - `!ask [name] [prompt]`: Talk to a model directly
-- `!clear [name]`: Clear the previous messages for a model
+- `!clear [name] [amount?]`: Clear the previous messages for a model
 - `!default [name]`: Set the default model for the channel. Not specifying a model will clear the default model
 - `!help`: Show the help message
 - `!basemodel`: Show the base model

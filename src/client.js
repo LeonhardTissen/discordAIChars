@@ -1,5 +1,4 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
-import dotenv from 'dotenv';
 
 const PREFIX = process.env.PREFIX;
 

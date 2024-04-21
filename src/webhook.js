@@ -7,10 +7,12 @@ export let currentWebhookModel = {
 	avatar: null,
 }
 
+const webhookFilePath = '../webhook.json';
+
 export async function getOrCreateWebhook(channel) {
-	if (fs.existsSync('webhook.json')) {
+	if (fs.existsSync(webhookFilePath)) {
 		// Load webhook from file
-		const webhookFile = fs.readFileSync('webhook.json', 'utf8');
+		const webhookFile = fs.readFileSync(webhookFilePath, 'utf8');
 		const webhookData = JSON.parse(webhookFile);
 		webhook = new WebhookClient({
 			id: webhookData.id,
@@ -25,7 +27,7 @@ export async function getOrCreateWebhook(channel) {
 		const name = Math.random().toString(36).substring(7);
 		webhook = await channel.createWebhook({name});
 		
-		fs.writeFileSync('webhook.json', JSON.stringify({
+		fs.writeFileSync(webhookFilePath, JSON.stringify({
 			id: webhook.id,
 			token: webhook.token,
 			avatar: null,
