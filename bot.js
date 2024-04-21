@@ -598,6 +598,11 @@ client.on('messageCreate', async (message) => {
 
 	if (hadPendingMessage) return;
 
+	if (message.content.startsWith('!')) {
+		await message.channel.send('### Invalid command, use `!help` for a list of commands');
+		return;
+	}
+
 	// Talk to default model
 	if (defaultChannelModel && !isIgnored(message.content)) {
 		talkToModel(defaultChannelModel, message.content, message);
