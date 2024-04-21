@@ -2,3 +2,4 @@
 node_modules
 database.db
 webhook.json
+settings.json
