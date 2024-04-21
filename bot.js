@@ -95,52 +95,58 @@ async function talkToModel(name, prompt, message) {
 		content: prompt,
 	});
 
-	// Send the previous messages to the model
-	const response = await ollama.chat({ 
-		model: BASE_MODEL, 
-		messages,
-		stream: true,
-		options: getParameters()
-	});
-	let result = '';
-
-
-	// Update the message with the model's responses every second
-	const interval = setInterval(() => {
-		webhook.editMessage(webhookMessage.id, { 
-			content: filterOutput(result) + messageCursor,
+	try {
+		// Send the previous messages to the model
+		const response = await ollama.chat({ 
+			model: BASE_MODEL, 
+			messages,
+			stream: true,
+			options: getParameters()
 		});
-	}, messageUpdateInterval);
-
-	// Update the final result with the model's responses
-	for await (const part of response) {
-		if (!part.message || !part.message.content) continue;
-
-		result += part.message.content;
-
-		process.stdout.write(part.message.content);
+		let result = '';
+	
+	
+		// Update the message with the model's responses every second
+		const interval = setInterval(() => {
+			webhook.editMessage(webhookMessage.id, { 
+				content: filterOutput(result) + messageCursor,
+			});
+		}, messageUpdateInterval);
+	
+		// Update the final result with the model's responses
+		for await (const part of response) {
+			if (!part.message || !part.message.content) continue;
+	
+			result += part.message.content;
+	
+			process.stdout.write(part.message.content);
+		}
+	
+		clearInterval(interval);
+	
+		await webhook.editMessage(webhookMessage.id, { content: filterOutput(result) });
+	
+		process.stdout.write('\n');
+	
+		// Save the previous messages (Ensure the array exists)
+		if (!previousMessages[row.idname]) {
+			previousMessages[row.idname] = [];
+		}
+	
+		previousMessages[row.idname].push({
+			role: 'user',
+			content: prompt,
+		}, {
+			role: 'assistant',
+			content: result,
+		});
+	
+		isGenerating = false;
+	} catch (err) {
+		console.error(err);
+		await message.channel.send(`### ${name} tragically died while generating a response.\n\n\`${err.message}\``);
+		isGenerating = false;
 	}
-
-	clearInterval(interval);
-
-	await webhook.editMessage(webhookMessage.id, { content: filterOutput(result) });
-
-	process.stdout.write('\n');
-
-	// Save the previous messages (Ensure the array exists)
-	if (!previousMessages[row.idname]) {
-		previousMessages[row.idname] = [];
-	}
-
-	previousMessages[row.idname].push({
-		role: 'user',
-		content: prompt,
-	}, {
-		role: 'assistant',
-		content: result,
-	});
-
-	isGenerating = false;
 	return;
 }
 
