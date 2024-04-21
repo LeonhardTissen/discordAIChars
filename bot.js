@@ -553,8 +553,8 @@ client.on('messageCreate', async (message) => {
 			switch (pendingMessage.state) {
 				case 'enter_name':
 					// Validate name
-					if (message.content.length < 3 || message.content.length > 20) {
-						await message.channel.send('### Name must be 3-20 characters long');
+					if (message.content.length < 3 || message.content.length > 64) {
+						await message.channel.send('### Name must be 3-64 characters long');
 						return;
 					}
 					pendingMessage.data.displayName = message.content;
