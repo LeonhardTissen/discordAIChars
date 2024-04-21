@@ -154,6 +154,8 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 		});
 	
 		isGenerating = false;
+
+		return result;
 	} catch (err) {
 		console.error(err);
 		await channel.send(`### ${modelName} tragically died while generating a response.\n\n\`${err.message}\``);

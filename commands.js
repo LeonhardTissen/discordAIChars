@@ -1,17 +1,18 @@
-import { cmdBasemodel } from "./commands/basemodel";
-import { cmdHelp } from "./commands/help";
-import { cmdCreate } from "./commands/create";
-import { cmdAsk } from "./commands/ask";
-import { cmdClear } from "./commands/clear";
-import { cmdTransfer } from "./commands/transfer";
-import { cmdList } from "./commands/list";
-import { cmdDefault } from "./commands/default";
-import { cmdPrompt } from "./commands/prompt";
-import { cmdSettings } from "./commands/settings";
-import { cmdDebug } from "./commands/debug";
-import { cmdInfo } from "./commands/info";
-import { cmdDelete } from "./commands/delete";
-import { cmdAvatar } from "./commands/avatar";
+import { cmdBasemodel } from "./commands/basemodel.js";
+import { cmdHelp } from "./commands/help.js";
+import { cmdCreate } from "./commands/create.js";
+import { cmdAsk } from "./commands/ask.js";
+import { cmdClear } from "./commands/clear.js";
+import { cmdTransfer } from "./commands/transfer.js";
+import { cmdList } from "./commands/list.js";
+import { cmdDefault } from "./commands/default.js";
+import { cmdPrompt } from "./commands/prompt.js";
+import { cmdSettings } from "./commands/settings.js";
+import { cmdDebug } from "./commands/debug.js";
+import { cmdInfo } from "./commands/info.js";
+import { cmdDelete } from "./commands/delete.js";
+import { cmdAvatar } from "./commands/avatar.js";
+import { cmdChain } from "./commands/chain.js";
 
 export const commandList = {
 	'basemodel': cmdBasemodel,
@@ -28,4 +29,5 @@ export const commandList = {
 	'info': cmdInfo,
 	'delete': cmdDelete,
 	'avatar': cmdAvatar,
+	'chain': cmdChain,
 }
