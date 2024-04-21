@@ -7,7 +7,7 @@ export let currentWebhookModel = {
 	avatar: null,
 }
 
-const webhookFilePath = '../webhook.json';
+const webhookFilePath = 'webhook.json';
 
 export async function getOrCreateWebhook(channel) {
 	if (fs.existsSync(webhookFilePath)) {
