@@ -66,6 +66,9 @@ if (fs.existsSync(settingsFilePath)) {
 }
 
 export function updateSetting(key, inputString) {
+	if (!settingDataTypes[key]) {
+		return `Invalid setting: ${key}`;
+	}
 	let value = inputString;
 	if (settingDataTypes[key] === 'float') {
 		value = parseFloat(inputString);
