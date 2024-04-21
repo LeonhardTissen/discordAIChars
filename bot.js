@@ -604,7 +604,7 @@ client.on('messageCreate', async (message) => {
 
 	if (hadPendingMessage) return;
 
-	if (message.content.startsWith('!')) {
+	if (message.content.startsWith(PREFIX)) {
 		await message.channel.send('### Invalid command, use `!help` for a list of commands');
 		return;
 	}
