@@ -400,6 +400,47 @@ client.on('messageCreate', async (message) => {
 	}
 
 
+	if (command === 'avatar') {
+		const [name, avatar] = restOfMessage.split(' ');
+
+		if (!name || !avatar) {
+			await message.channel.send('### Please specify a model and an avatar URL');
+			return;
+		}
+
+		// Check if owner
+		const row = await new Promise((resolve, reject) => {
+			db.get('SELECT owner FROM models WHERE idname = ?', [name], (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(row);
+			}
+		)});
+
+		if (!row) {
+			await message.channel.send(`### Model with name "${name}" not found`);
+			return;
+		}
+
+		if (row.owner !== message.author.id) {
+			await message.channel.send(`### You do not own the model with the name "${name}"`);
+			return;
+		}
+
+		// Edit avatar
+		db.run('UPDATE models SET profile = ? WHERE idname = ?', [avatar, name], async (err) => {
+			if (err) {
+				console.error(err);
+				return;
+			}
+
+			await message.channel.send(`### Avatar for model "${name}" updated`);
+		});
+	}
+
+
 	if (command === 'info') {
 		const name = restOfMessage;
 

@@ -14,6 +14,7 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 - `!create`: Create a new model
 - `!delete [name]`: Delete a model, if you own it
 - `!prompt [name] [prompt]`: Shows or edit prompt for a model, if you own it
+- `!avatar [name] [url]`: Edit avatar for a model, if you own it
 - `!transfer [name] [user]`: Transfer ownership of a model to another user
 - `!list`: List all models
 - `!info [name]`: Show info about a model
@@ -22,7 +23,9 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 - `!default [name]`: Set the default model for the channel. Not specifying a model will clear the default model
 - `!help`: Show the help message
 - `!basemodel`: Show the base model
-- `!settings [setting?] [value?]`: Change the parameters of the models. If not specified, it will show the current settings
+- `!settings`: Show the settings
+- `!settings reset`: Reset the settings
+- `!settings [setting?] [value?]`: Change the parameters of the models.
 
 ## Requirements
 
