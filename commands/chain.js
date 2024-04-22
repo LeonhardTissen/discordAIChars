@@ -1,3 +1,4 @@
+import { registerCommand } from "../registrar.js";
 import { talkToModel } from "../src/ollama.js";
 
 // TODO: Move to a configurable value
@@ -9,7 +10,7 @@ const maximumModelChain = 5;
  * @returns {string} - The response message
  * @example !chain [Ben, Jerry, Ben] Say hello to Jerry
  */
-export async function cmdChain(restOfMessage) {
+async function cmdChain(restOfMessage) {
 	const firstBracketIndex = restOfMessage.indexOf('[');
 	const lastBracketIndex = restOfMessage.lastIndexOf(']');
 	const bracketContent = restOfMessage.substring(firstBracketIndex + 1, lastBracketIndex);
@@ -30,3 +31,5 @@ export async function cmdChain(restOfMessage) {
 		}
 	}
 }
+
+registerCommand('chain', cmdChain, 'Interact', 'Chain multiple models together, feeding the output of one model to the next', '[model1, model2, ...] [prompt]');

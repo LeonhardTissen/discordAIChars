@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { deleteModel, getModel } from "../src/db.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Delete a model, if the model is owned by the user
@@ -8,7 +9,7 @@ import { deleteModel, getModel } from "../src/db.js";
  * @returns {string} - The response message
  * @example !delete Ben
  */
-export async function cmdDelete(idName, message) {
+async function cmdDelete(idName, message) {
 	if (idName === '') return '### Please specify a model to delete'
 
 	const modelData = await getModel(idName);
@@ -23,3 +24,5 @@ export async function cmdDelete(idName, message) {
 
 	return `### Model with name "${idName}" deleted`
 }
+
+registerCommand('delete', cmdDelete, 'Manage', 'Delete a model, if the model is owned by the user', '[name]');

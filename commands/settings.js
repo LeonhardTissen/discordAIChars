@@ -1,3 +1,4 @@
+import { registerCommand } from "../registrar.js";
 import { displaySettings, resetSettings, updateSetting } from "../src/settings.js";
 
 /**
@@ -8,7 +9,7 @@ import { displaySettings, resetSettings, updateSetting } from "../src/settings.j
  * @example !settings reset
  * @example !settings temperature 0.5
  */
-export async function cmdSettings(restOfMessage) {
+async function cmdSettings(restOfMessage) {
 	const [key, value] = restOfMessage.split(' ');
 
 	if (!key) {
@@ -25,3 +26,5 @@ export async function cmdSettings(restOfMessage) {
 	const response = updateSetting(key, value);
 	return `### ${response}`
 }
+
+registerCommand('settings', cmdSettings, 'Settings', 'Display or update model settings', '[key] [value] | reset');

@@ -1,3 +1,4 @@
+import { registerCommand } from "../registrar.js";
 import { getModel } from "../src/db.js";
 import { previousMessages } from "../src/ollama.js";
 
@@ -8,7 +9,7 @@ import { previousMessages } from "../src/ollama.js";
  * @example !clear Ben
  * @example !clear Ben 5
  */
-export async function cmdClear(restOfMessage) {
+async function cmdClear(restOfMessage) {
 	const [idName, amount] = restOfMessage.split(' ');
 
 	if (idName === '') return '### Please specify a model to clear';
@@ -30,3 +31,5 @@ export async function cmdClear(restOfMessage) {
 
 	return `### Last ${num} messages cleared for model "${idName}"`;
 }
+
+registerCommand('clear', cmdClear, 'Interact', 'Clear chat history for a model', '[name] [amount?]');

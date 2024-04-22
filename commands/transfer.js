@@ -1,14 +1,15 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Transfer ownership of a model to another user.
  * @param {string} restOfMessage 
  * @param {Message} message 
- * @returns {string} - The response message\
+ * @returns {string} - The response message
  * @example !transfer Ben <@1234567890>
  */
-export async function cmdTransfer(restOfMessage, message) {
+async function cmdTransfer(restOfMessage, message) {
 	let [idName, user] = restOfMessage.split(' ');
 
 	if (!idName || !user) return '### Please specify a model and a user to transfer ownership'
@@ -33,3 +34,5 @@ export async function cmdTransfer(restOfMessage, message) {
 		return `### Error transferring ownership of model "${idName}"`
 	}
 }
+
+registerCommand('transfer', cmdTransfer, 'Manage', 'Transfer ownership of a model to another user', '[name] [user]')

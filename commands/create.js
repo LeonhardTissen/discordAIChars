@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { addPendingMessage } from "../src/pending.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Start the process of creating a new model. The user will be asked for a name, avatar and prompt.
@@ -8,7 +9,7 @@ import { addPendingMessage } from "../src/pending.js";
  * @returns {string} - The response message
  * @example !create
  */
-export function cmdCreate(_, message) {
+function cmdCreate(_, message) {
 	addPendingMessage({
 		user: message.author.id,
 		data: {},
@@ -16,3 +17,5 @@ export function cmdCreate(_, message) {
 	});
 	return '### Enter name:\n*Type `cancel` at any point to cancel.*';
 }
+
+registerCommand('create', cmdCreate, 'Manage', 'Start the process of creating a new model. The user will be asked for a name, avatar and prompt');

@@ -1,3 +1,4 @@
+import { registerCommand } from "../registrar.js";
 import { getModel } from "../src/db.js";
 
 /**
@@ -6,7 +7,7 @@ import { getModel } from "../src/db.js";
  * @returns {string} - The response message
  * @example !info Ben
  */
-export async function cmdInfo(idName) {
+async function cmdInfo(idName) {
 	if (!idName) return '### Please specify a model to show info'
 
 	const row = await getModel(idName);
@@ -20,3 +21,5 @@ export async function cmdInfo(idName) {
 - Owner: ${owner}
 - Prompt: ${model}`
 }
+
+registerCommand('info', cmdInfo, 'Browse', 'Show various information about a model', '[name]');

@@ -1,3 +1,5 @@
+import { registerCommand } from "../registrar.js";
+
 const BASE_MODEL = process.env.BASE_MODEL;
 
 /**
@@ -5,6 +7,8 @@ const BASE_MODEL = process.env.BASE_MODEL;
  * @returns {string} - The response message containing the base model
  * @example !basemodel
  */
-export function cmdBasemodel() {
+function cmdBasemodel() {
 	return `### Base model: ${BASE_MODEL}`
 }
+
+registerCommand('basemodel', cmdBasemodel, 'Other', 'Returns the base model');

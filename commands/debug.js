@@ -1,9 +1,12 @@
+import { registerCommand } from "../registrar.js";
 import { previousMessages } from "../src/ollama.js";
 
 /**
  * Debug command to print previous messages.
  * @example !debug
  */
-export function cmdDebug() {
+function cmdDebug() {
 	console.log(previousMessages)
 }
+
+registerCommand('debug', cmdDebug, 'Debug', 'Debug command to print previous messages');

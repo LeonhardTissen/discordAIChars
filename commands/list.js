@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { getAllModels } from "../src/db.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Show a list of all available models, separated by whether the user owns them or not.
@@ -8,7 +9,7 @@ import { getAllModels } from "../src/db.js";
  * @returns {string} - The response message
  * @example !list
  */
-export async function cmdList(_, message) {
+async function cmdList(_, message) {
 	const modelDataArr = await getAllModels();
 
 	if (!modelDataArr.length) return '### No models found';
@@ -26,3 +27,5 @@ export async function cmdList(_, message) {
 
 	return `### Your Models:\n${yourModels.join(', ')}\n### Other Models:\n${otherModels.join(', ')}`;
 }
+
+registerCommand('list', cmdList, 'Browse', 'Show a list of all available models, separated by whether the user owns them or not');

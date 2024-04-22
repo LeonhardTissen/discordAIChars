@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Show or edit the prompt for a model
@@ -9,7 +10,7 @@ import { getModel, updateField } from "../src/db.js";
  * @example !prompt Ben
  * @example !prompt Ben You are ben, a detective in a small town...
  */
-export async function cmdPrompt(restOfMessage, message) {
+async function cmdPrompt(restOfMessage, message) {
 	const [idName, ...prompt] = restOfMessage.split(' ');
 
 	if (!idName) return '### Please specify a model to show or edit the prompt'
@@ -37,3 +38,5 @@ export async function cmdPrompt(restOfMessage, message) {
 		return `### Failed to update prompt for model "${idName}": ${error.message}`;
 	}
 }
+
+registerCommand('prompt', cmdPrompt, 'Manage', 'Show or edit the prompt for a model', '[name] [prompt]');

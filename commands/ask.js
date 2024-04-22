@@ -1,3 +1,4 @@
+import { registerCommand } from "../registrar.js";
 import { talkToModel } from "../src/ollama.js";
 
 /**
@@ -5,9 +6,11 @@ import { talkToModel } from "../src/ollama.js";
  * @param {string} restOfMessage - The message after the command.
  * @example !ask Ben How are you?
  */
-export function cmdAsk(restOfMessage) {
+function cmdAsk(restOfMessage) {
 	const [idName, ...prompt] = restOfMessage.split(' ');
 	const promptString = prompt.join(' ');
 
 	talkToModel(promptString, idName);
 }
+
+registerCommand('ask', cmdAsk, 'Interact', 'Ask the model a question directly', '[name] [prompt]');

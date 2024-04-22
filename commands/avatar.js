@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Change the avatar of a model, if the model is owned by the user
@@ -8,7 +9,7 @@ import { getModel, updateField } from "../src/db.js";
  * @returns {string} - The response message
  * @example !avatar Ben https://example.com/avatar.png
  */
-export async function cmdAvatar(restOfMessage, message) {
+async function cmdAvatar(restOfMessage, message) {
 	const [idName, avatar] = restOfMessage.split(' ');
 
 	if (!idName || !avatar) return '### Please specify a model and an avatar URL'
@@ -30,3 +31,5 @@ export async function cmdAvatar(restOfMessage, message) {
 		return `### Failed to update avatar for model "${idName}": ${error.message}`
 	}
 }
+
+registerCommand('avatar', cmdAvatar, 'Manage', 'Change the avatar of a model, if the model is owned by the user', '[name] [avatar]');
