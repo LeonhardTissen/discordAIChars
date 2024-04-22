@@ -19,7 +19,7 @@ export async function cmdChain(restOfMessage) {
 	if (modelNames.length > maximumModelChain) return `### You can only chain up to ${maximumModelChain} models.`;
 
 	for (const modelName of modelNames) {
-		prompt = `${modelName}: ${await talkToModel(prompt, modelName)}`;
+		prompt = await talkToModel(prompt, modelName);
 		if (!prompt) {
 			return `### Model ${modelName} failed to respond.`;
 		}
