@@ -21,7 +21,7 @@ export async function getAllModels() {
 
 export async function getModel(idName) {
 	return new Promise((resolve, reject) => {
-		db.get('SELECT * FROM models WHERE idname = ?', [idName], (err, row) => {
+		db.get('SELECT * FROM models WHERE idname = ? COLLATE NOCASE', [idName], (err, row) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -33,7 +33,7 @@ export async function getModel(idName) {
 
 export async function updateField(idName, field, value) {
 	return new Promise((resolve, reject) => {
-		db.run(`UPDATE models SET ${field} = ? WHERE idname = ?`, [value, idName], (err) => {
+		db.run(`UPDATE models SET ${field} = ? WHERE idname = ? COLLATE NOCASE`, [value, idName], (err) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -45,7 +45,7 @@ export async function updateField(idName, field, value) {
 
 export async function deleteModel(idName) {
 	return new Promise((resolve, reject) => {
-		db.run('DELETE FROM models WHERE idname = ?', [idName], (err) => {
+		db.run('DELETE FROM models WHERE idname = ? COLLATE NOCASE', [idName], (err) => {
 			if (err) {
 				reject(err);
 			} else {

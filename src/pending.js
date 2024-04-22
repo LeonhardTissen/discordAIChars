@@ -1,5 +1,5 @@
 import { channel } from "./channel.js";
-import { addModel } from "./db.js";
+import { addModel, getModel } from "./db.js";
 
 export let pendingMessages = [];
 
@@ -33,6 +33,11 @@ export async function processPendingMessages(message) {
 			// Validate name
 			if (content.length < 3 || content.length > 64) {
 				await channel.send('### Name must be 3-64 characters long');
+				return;
+			}
+			// Check if name is already taken
+			if (await getModel(content)) {
+				await channel.send('### Name already taken, please choose another');
 				return;
 			}
 			pendingMessage.data.displayName = content;
