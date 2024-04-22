@@ -54,3 +54,15 @@ export async function deleteModel(idName) {
 		});
 	});
 }
+
+export async function addModel(idName, displayName, prompt, owner, profile) {
+	return new Promise((resolve, reject) => {
+		db.run('INSERT INTO models (idname, displayname, model, owner, profile) VALUES (?, ?, ?, ?, ?)', [idName, displayName, prompt, owner, profile], (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}

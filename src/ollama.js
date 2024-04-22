@@ -1,7 +1,7 @@
 import ollama from 'ollama';
 import fs from 'fs';
 
-import { db } from './db.js';
+import { getModel } from './db.js';
 import { getParameters, settings } from './settings.js';
 import { webhook, currentWebhookModel } from './webhook.js';
 import { filterOutput } from './filter.js';
@@ -55,16 +55,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 		return;
 	}
 	
-	// Find webhook by name
-	const modelData = await new Promise((resolve, reject) => {
-		db.get('SELECT idname, model, profile, displayname FROM models WHERE idname = ?', [modelName], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		}
-	)});
+	const modelData = await getModel(modelName);
 
 	// Check if model exists
 	if (!modelData) {

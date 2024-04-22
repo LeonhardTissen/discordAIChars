@@ -1,5 +1,5 @@
 import { channel } from "./channel.js";
-import { db } from "./db.js";
+import { addModel, db } from "./db.js";
 
 export let pendingMessages = [];
 
@@ -62,16 +62,12 @@ export async function processPendingMessages(message) {
 			}
 			pendingMessage.data.prompt = content;
 
+			const { displayName, idName, avatar, prompt } = pendingMessage.data;
+
 			// Save webhook to database
-			db.run('INSERT INTO models (idname, displayname, model, owner, profile) VALUES (?, ?, ?, ?, ?)', [
-				pendingMessage.data.idName,
-				pendingMessage.data.displayName,
-				pendingMessage.data.prompt, 
-				message.author.id,
-				pendingMessage.data.avatar,
-			]);
+			addModel(idName, displayName, prompt, author, avatar);
 			
-			clearPendingMessages(message.author.id);
+			clearPendingMessages(author);
 
 			await channel.send(`### Model "${pendingMessage.data.displayName}" created`);
 			break;
