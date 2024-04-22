@@ -4,7 +4,7 @@ export function filterOutput(output) {
 		return '<empty message>';
 	}
 	return output
-		.replace(/<@!?[0-9]+>/g, '')
+		.replace(/<@!?\d+>/g, '')
 		.replace(/@everyone/g, '')
 		.replace(/@here/g, '')
 		.slice(0, 1998);
