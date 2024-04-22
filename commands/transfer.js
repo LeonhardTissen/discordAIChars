@@ -1,10 +1,10 @@
-import { db, getModel } from "../src/db.js";
+import { getModel, updateField } from "../src/db.js";
 
 export async function cmdTransfer(restOfMessage, message) {
 	// Example: !transfer Ben userid
-	let [name, user] = restOfMessage.split(' ');
+	let [idName, user] = restOfMessage.split(' ');
 
-	if (!name || !user) {
+	if (!idName || !user) {
 		return '### Please specify a model and a user to transfer ownership'
 	}
 
@@ -12,28 +12,19 @@ export async function cmdTransfer(restOfMessage, message) {
 	user = user.replace(/\D/g, '');
 
 	// Check if owner
-	const modelData = await getModel(name);
+	const modelData = await getModel(idName);
 
 	const { owner } = modelData;
 
-	if (!modelData) {
-		return `### Model with name "${name}" not found`
-	}
+	if (!modelData) return `### Model with name "${idName}" not found`
 
-	if (owner !== message.author.id) {
-		return `### You do not own the model with the name "${name}"`
-	}
+	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
 
 	// Transfer ownership
-	await new Promise((resolve, reject) => {
-		db.run('UPDATE models SET owner = ? WHERE idname = ?', [user, name], (err) => {
-			if (err) {
-				reject(err);
-				return '### Error transferring ownership';
-			}
-			resolve();
-		});
-	});
-
-	return `### Model "${name}" transferred to <@${user}>, they are now the owner`;
+	try {
+		await updateField(idName, 'owner', user);
+		return `### Ownership of model "${idName}" transferred to <@${user}>`
+	} catch (e) {
+		return `### Error transferring ownership of model "${idName}"`
+	}
 }
