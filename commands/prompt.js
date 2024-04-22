@@ -1,6 +1,5 @@
 import { db, getModel } from "../src/db.js";
 
-
 export async function cmdPrompt(restOfMessage, message) {
 	// Example: !prompt Ben
 	const [idName, ...prompt] = restOfMessage.split(' ');

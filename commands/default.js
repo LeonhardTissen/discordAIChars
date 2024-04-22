@@ -1,11 +1,9 @@
 import { getModel } from "../src/db.js";
 import { resetDefaultChannelModel, setDefaultChannelModel } from "../src/ollama.js";
 
-
 export async function cmdDefault(restOfMessage) {
 	// Example: !default Ben
 	const idName = restOfMessage;
-
 		
 	if (idName === '') {
 		resetDefaultChannelModel();

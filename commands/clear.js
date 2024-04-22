@@ -1,4 +1,4 @@
-import { db, getModel } from "../src/db.js";
+import { getModel } from "../src/db.js";
 import { previousMessages } from "../src/ollama.js";
 
 export async function cmdClear(restOfMessage) {
