@@ -1,30 +1,22 @@
-import { db } from "../src/db.js";
+import { db, getModel } from "../src/db.js";
 
 export async function cmdDelete(restOfMessage, message) {
 	// Example: !delete Ben
-	const modelName = restOfMessage;
+	const idName = restOfMessage;
 
-	if (modelName === '') return '### Please specify a model to delete'
+	if (idName === '') return '### Please specify a model to delete'
 
 	// Find webhook by name
-	const modelData = await new Promise((resolve, reject) => {
-		db.get('SELECT idname, owner FROM models WHERE idname = ?', [modelName], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		}
-	)});
+	const modelData = await getModel(idName);
 
-	if (!modelData) return `### Model with name "${modelName}" not found`
+	if (!modelData) return `### Model with name "${idName}" not found`
 
 	const { idname, owner } = modelData;
 
-	if (owner !== message.author.id) return `### You do not own the model with the name "${modelName}"`
+	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
 
 	// Delete model from database
 	db.run('DELETE FROM models WHERE idname = ?', [idname]);
 
-	return `### Model with name "${modelName}" deleted`
+	return `### Model with name "${idName}" deleted`
 }

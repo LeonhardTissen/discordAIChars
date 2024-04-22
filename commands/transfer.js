@@ -1,4 +1,4 @@
-import { db } from "../src/db.js";
+import { db, getModel } from "../src/db.js";
 
 export async function cmdTransfer(restOfMessage, message) {
 	// Example: !transfer Ben userid
@@ -12,15 +12,7 @@ export async function cmdTransfer(restOfMessage, message) {
 	user = user.replace(/[^0-9]/g, '');
 
 	// Check if owner
-	const modelData = await new Promise((resolve, reject) => {
-		db.get('SELECT owner FROM models WHERE idname = ?', [name], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		}
-	)});
+	const modelData = await getModel(name);
 
 	const { owner } = modelData;
 
@@ -33,15 +25,6 @@ export async function cmdTransfer(restOfMessage, message) {
 	}
 
 	// Transfer ownership
-	db.run('UPDATE models SET owner = ? WHERE idname = ?', [user, name], async (err) => {
-		if (err) {
-			console.error(err);
-			return;
-		}
-
-		return `### Model "${name}" transferred to <@${user}>, they are now the owner`
-	});
-
 	await new Promise((resolve, reject) => {
 		db.run('UPDATE models SET owner = ? WHERE idname = ?', [user, name], (err) => {
 			if (err) {

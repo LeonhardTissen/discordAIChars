@@ -1,24 +1,21 @@
-import { db } from "../src/db.js";
+import { getAllModels } from "../src/db.js";
 
 export async function cmdList(_, message) {
 	// List all models
-	const modelDataArr = await new Promise((resolve, reject) => {
-		db.all('SELECT idname, owner FROM models', (err, rows) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(rows);
+	const modelDataArr = await getAllModels();
+
+	if (!modelDataArr.length) return '### No models found';
+
+	const yourModels = [];
+	const otherModels = [];
+
+	for (const { idname, owner } of modelDataArr) {
+		if (owner === message.author.id) {
+			yourModels.push(idname);
+		} else {
+			otherModels.push(idname);
 		}
-	)});
-
-	if (!modelDataArr.length) {
-		return '### No models found';
 	}
-
-	const yourModels = modelDataArr.filter(({ owner }) => owner === message.author.id).map(({ idname }) => idname);
-
-	const otherModels = modelDataArr.filter(({ owner }) => owner !== message.author.id).map(({ idname }) => idname);
 
 	return `### Your Models:\n${yourModels.join(', ')}\n### Other Models:\n${otherModels.join(', ')}`;
 }

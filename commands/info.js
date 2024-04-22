@@ -1,19 +1,11 @@
-import { db } from "../src/db.js";
+import { getModel } from "../src/db.js";
 
 export async function cmdInfo(restOfMessage) {
 	const idName = restOfMessage;
 
 	if (!idName) return '### Please specify a model to show info'
 
-	const row = await new Promise((resolve, reject) => {
-		db.get('SELECT idname, displayname, owner, model, profile FROM models WHERE idname = ?', [idName], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		}
-	)});
+	const row = await getModel(idName);
 
 	const { displayname, owner, model, profile } = row;
 

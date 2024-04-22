@@ -1,26 +1,14 @@
-import { db } from "../src/db.js";
+import { db, getModel } from "../src/db.js";
 import { previousMessages } from "../src/ollama.js";
 
 export async function cmdClear(restOfMessage) {
 	const [idName, amount] = restOfMessage.split(' ');
 
-	if (idName === '') {
-		return '### Please specify a model to clear';
-	}
+	if (idName === '') return '### Please specify a model to clear';
 
-	const modelData = await new Promise((resolve, reject) => {
-		db.get('SELECT idname FROM models WHERE idname = ?', [idName], (err, row) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(row);
-		})
-	});
+	const modelData = await getModel(idName);
 
-	if (!modelData) {
-		return `### Model with name "${idName}" not found`
-	}
+	if (!modelData) return `### Model with name "${idName}" not found`
 
 	if (!amount) {
 		previousMessages[idName] = [];
@@ -28,9 +16,7 @@ export async function cmdClear(restOfMessage) {
 	}
 
 	const num = parseInt(amount);
-	if (isNaN(num)) {
-		return '### Please specify a valid number of messages to clear'
-	}
+	if (isNaN(num)) return '### Please specify a valid number of messages to clear'
 
 	previousMessages[idName] = previousMessages[idName].slice(0, -num * 2);
 	return `### Last ${num} messages cleared for model "${idName}"`;
