@@ -66,39 +66,53 @@ if (fs.existsSync(settingsFilePath)) {
 }
 
 export function updateSetting(key, inputString) {
-	if (!settingDataTypes[key]) {
-		return `Invalid setting: ${key}`;
+	const dataType = settingDataTypes[key];
+	const bounds = settingBounds[key];
+	const errorMessage = validateInput(key, inputString, dataType, bounds);
+	if (errorMessage) return errorMessage;
+
+	const value = convertValue(inputString, dataType);
+	settings[key] = value;
+	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
+	return `Updated ${key} to ${value}`;
+}
+
+function validateInput(key, inputString, dataType, bounds) {
+	if (!dataType) return `Invalid setting: ${key}`;
+	
+	if (dataType === 'float' && isNaN(parseFloat(inputString))) {
+		return `Invalid value for ${key}. Must be a float`;
+	} 
+	
+	if (dataType === 'int' && isNaN(parseInt(inputString))) {
+		return `Invalid value for ${key}. Must be an integer`;
 	}
-	let value = inputString;
-	if (settingDataTypes[key] === 'float') {
-		value = parseFloat(inputString);
-		if (isNaN(value)) {
-			return `Invalid value for ${key}. Must be a float`;
-		}
-	} else if (settingDataTypes[key] === 'int') {
-		value = parseInt(inputString);
-		if (isNaN(value)) {
-			return `Invalid value for ${key}. Must be an integer`;
-		}
-	} else if (settingDataTypes[key] === 'bool') {
-		value = inputString.toLowerCase();
-		if (value === 'true') {
-			value = true;
-		} else if (value === 'false') {
-			value = false;
-		} else {
-			return `Invalid value for ${key}. Must be true or false`;
-		}
+
+	if (dataType === 'bool' && !['true', 'false'].includes(inputString.toLowerCase())) {
+		return `Invalid value for ${key}. Must be true or false`;
 	}
-	if (settingBounds[key]) {
-		const [min, max] = settingBounds[key];
+
+	if (bounds) {
+		const [min, max] = bounds;
+		const value = parseFloat(inputString);
 		if (value < min || value > max) {
 			return `Value for ${key} must be between ${min} and ${max}`;
 		} 
 	}
-	settings[key] = value;
-	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
-	return `Updated ${key} to ${value}`;
+
+	return null; // No error
+}
+
+function convertValue(inputString, dataType) {
+	if (dataType === 'float') {
+		return parseFloat(inputString);
+	} 
+	if (dataType === 'int') {
+		return parseInt(inputString);
+	} 
+	if (dataType === 'bool') {
+		return inputString.toLowerCase() === 'true';
+	}
 }
 
 export function resetSettings() {
