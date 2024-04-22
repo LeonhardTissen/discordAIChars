@@ -9,7 +9,7 @@ export async function cmdTransfer(restOfMessage, message) {
 	}
 
 	// Remove non-numeric characters from user
-	user = user.replace(/[^0-9]/g, '');
+	user = user.replace(/\D/g, '');
 
 	// Check if owner
 	const modelData = await getModel(name);
