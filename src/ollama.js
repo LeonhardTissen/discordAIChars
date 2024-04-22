@@ -127,7 +127,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	
 		// Update the final result with the model's responses
 		for await (const part of response) {
-			if (!part.message || !part.message.content) continue;
+			if (!part.message?.content) continue;
 	
 			result += part.message.content;
 	
