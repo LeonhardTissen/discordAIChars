@@ -1,4 +1,4 @@
-import { db, getModel } from "../src/db.js";
+import { getModel, updateField } from "../src/db.js";
 
 export async function cmdAvatar(restOfMessage, message) {
 	const [idName, avatar] = restOfMessage.split(' ');
@@ -15,12 +15,10 @@ export async function cmdAvatar(restOfMessage, message) {
 	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
 
 	// Edit avatar
-	db.run('UPDATE models SET profile = ? WHERE idname = ?', [avatar, idName], async (err) => {
-		if (err) {
-			console.error(err);
-			return;
-		}
-	});
-	
-	return `### Avatar for model "${idName}" updated`
+	try {
+		await updateField(idName, 'profile', avatar);
+		return `### Avatar for model "${idName}" updated`
+	} catch (error) {
+		return `### Failed to update avatar for model "${idName}": ${error.message}`
+	}
 }

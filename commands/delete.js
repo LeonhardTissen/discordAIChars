@@ -1,4 +1,4 @@
-import { db, getModel } from "../src/db.js";
+import { deleteModel, getModel } from "../src/db.js";
 
 export async function cmdDelete(restOfMessage, message) {
 	// Example: !delete Ben
@@ -16,7 +16,7 @@ export async function cmdDelete(restOfMessage, message) {
 	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
 
 	// Delete model from database
-	db.run('DELETE FROM models WHERE idname = ?', [idname]);
+	await deleteModel(idName);
 
 	return `### Model with name "${idName}" deleted`
 }

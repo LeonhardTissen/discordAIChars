@@ -1,6 +1,5 @@
 import 'dotenv/config'
 
-import { db } from './src/db.js';
 import { client } from './src/client.js';
 import { isIgnored } from './src/ignore.js';
 import { getOrCreateWebhook } from './src/webhook.js';
@@ -33,11 +32,10 @@ client.on('messageCreate', async (message) => {
 		restOfMessage = message.content.replace(PREFIX + command, '').trim();
 	};
 
+	// Process commands
 	if (command in commandList) {
 		const response = await commandList[command](restOfMessage, message);
-		if (response) {
-			await message.channel.send(response);
-		}
+		if (response) channel.send(response)
 		return;
 	}
 
@@ -57,8 +55,6 @@ client.on('messageCreate', async (message) => {
 	if (defaultChannelModel && !isIgnored(message.content)) {
 		talkToModel(message.content, defaultChannelModel);
 	}
-
-
 });
 
 export function startBot() {

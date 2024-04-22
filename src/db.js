@@ -30,3 +30,27 @@ export async function getModel(idName) {
 		});
 	});
 }
+
+export async function updateField(idName, field, value) {
+	return new Promise((resolve, reject) => {
+		db.run(`UPDATE models SET ${field} = ? WHERE idname = ?`, [value, idName], (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}
+
+export async function deleteModel(idName) {
+	return new Promise((resolve, reject) => {
+		db.run('DELETE FROM models WHERE idname = ?', [idName], (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}

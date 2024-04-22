@@ -1,4 +1,4 @@
-import { db, getModel } from "../src/db.js";
+import { db, getModel, updateField } from "../src/db.js";
 
 export async function cmdPrompt(restOfMessage, message) {
 	// Example: !prompt Ben
@@ -8,21 +8,11 @@ export async function cmdPrompt(restOfMessage, message) {
 
 	const promptString = prompt.join(' ');
 	if (!promptString) {
-		const response = await new Promise((resolve, _) => {
-			db.get('SELECT model FROM models WHERE idname = ?', [idName], async (err, row) => {
-				if (err) {
-					resolve(`### Error fetching prompt for model "${idName}"`)
-				}
+		const modelData = await getModel(idName);
 
-				if (row === undefined) {
-					resolve(`### Model with name "${idName}" not found`)
-					return;
-				}
+		if (!modelData) return `### Model with name "${idName}" not found`
 
-				resolve(`### Prompt for model "${idName}":\n${row.model}`);
-			});
-		});
-		return response;
+		return `### Prompt for model "${idName}":\n${modelData.model}`
 	}
 
 	// Check if owner
@@ -32,16 +22,10 @@ export async function cmdPrompt(restOfMessage, message) {
 
 	if (row.owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
 
-	const response = await new Promise((resolve, _) => {
-		// Edit prompt
-		db.run('UPDATE models SET model = ? WHERE idname = ?', [promptString, idName], async (err) => {
-			if (err) {
-				resolve(`### Error updating prompt for model "${idName}"`)
-			}
-
-			resolve(`### Prompt for model "${idName}" updated`)
-		});
-	});
-
-	return response
+	try {
+		await updateField(idName, 'model', promptString);
+		return `### Prompt for model "${idName}" updated`;
+	} catch (error) {
+		return `### Failed to update prompt for model "${idName}": ${error.message}`;
+	}
 }
