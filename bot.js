@@ -6,7 +6,7 @@ import { isIgnored } from './src/ignore.js';
 import { getOrCreateWebhook } from './src/webhook.js';
 import { defaultChannelModel, talkToModel } from './src/ollama.js';
 import { channel, setChannel } from './src/channel.js';
-import { clearPendingMessages, pendingMessages } from './src/pending.js';
+import { hasPendingMessage, processPendingMessages } from './src/pending.js';
 import { commandList } from './commands.js';
 
 // Discord bot setup
@@ -42,62 +42,10 @@ client.on('messageCreate', async (message) => {
 	}
 
 	// Process pending messages
-	const hadPendingMessage = pendingMessages.some(async (pendingMessage) => {
-		if (pendingMessage.user === message.author.id) {
-			switch (pendingMessage.state) {
-				case 'enter_name':
-					// Validate name
-					if (message.content.length < 3 || message.content.length > 64) {
-						await message.channel.send('### Name must be 3-64 characters long');
-						return;
-					}
-					pendingMessage.data.displayName = message.content;
-					pendingMessage.data.idName = message.content.replace(/\s/g, '');
-					if (message.content.includes(' ')) {
-						await message.channel.send(`### Name sanitized to "${pendingMessage.data.idName}" but still displayed as "${pendingMessage.data.displayName}"`);
-					}
-					pendingMessage.state = 'enter_avatar';
-					await message.channel.send('### Enter avatar:\n(Provide a URL, not an attachment)');
-					break;
-				case 'enter_avatar':
-					// Validate URL
-					if (!message.content.startsWith('http')) {
-						await message.channel.send('### Invalid URL, please provide a valid URL');
-						return;
-					}
-
-					pendingMessage.data.avatar = message.content;
-					pendingMessage.state = 'enter_prompt';
-					await message.channel.send('### Enter prompt:');
-					break;
-				case 'enter_prompt':
-					// Validate prompt
-					if (message.content.length < 32) {
-						await message.channel.send('### Prompt must be at least 32 characters long');
-						return;
-					}
-					pendingMessage.data.prompt = message.content;
-
-					// Save webhook to database
-					db.run('INSERT INTO models (idname, displayname, model, owner, profile) VALUES (?, ?, ?, ?, ?)', [
-						pendingMessage.data.idName,
-						pendingMessage.data.displayName,
-						pendingMessage.data.prompt, 
-						message.author.id,
-						pendingMessage.data.avatar,
-					]);
-					
-					clearPendingMessages(message.author.id);
-
-					await message.channel.send(`### Model "${pendingMessage.data.displayName}" created`);
-					break;
-			}
-			return true;
-		}
-	});
-
-	// Don't process default model if there was a pending message
-	if (hadPendingMessage) return;
+	if (hasPendingMessage(message.author.id)) {
+		await processPendingMessages(message);
+		return;
+	}
 
 	// Default response for invalid commands
 	if (message.content.startsWith(PREFIX)) {

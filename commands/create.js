@@ -7,5 +7,5 @@ export function cmdCreate(_, message) {
 		data: {},
 		state: 'enter_name',
 	});
-	return '### Enter name:';
+	return '### Enter name:\n*Type `cancel` at any point to cancel.*';
 }
