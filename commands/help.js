@@ -1,5 +1,7 @@
-import { getHelpMessage } from "../src/help.js";
+import fs from 'fs';
+import { format } from "../src/formatter.js";
 
 export function cmdHelp() {
-	return getHelpMessage();
+	const helpFile = fs.readFileSync('help.txt', 'utf8')
+	return format(helpFile);
 }

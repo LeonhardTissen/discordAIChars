@@ -1,5 +1,5 @@
 import { channel } from "./channel.js";
-import { addModel, db } from "./db.js";
+import { addModel } from "./db.js";
 
 export let pendingMessages = [];
 
