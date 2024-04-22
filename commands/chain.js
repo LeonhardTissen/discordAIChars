@@ -1,10 +1,15 @@
 import { talkToModel } from "../src/ollama.js";
 
+// TODO: Move to a configurable value
 const maximumModelChain = 5;
 
+/**
+ * Chain multiple models together, feeding the output of one model to the next.
+ * @param {string} restOfMessage - The rest of the message after the command
+ * @returns {string} - The response message
+ * @example !chain [Ben, Jerry, Ben] Say hello to Jerry
+ */
 export async function cmdChain(restOfMessage) {
-	// Example: !chain [modelA, modelB] What is the capital of France?
-
 	const firstBracketIndex = restOfMessage.indexOf('[');
 	const lastBracketIndex = restOfMessage.lastIndexOf(']');
 	const bracketContent = restOfMessage.substring(firstBracketIndex + 1, lastBracketIndex);

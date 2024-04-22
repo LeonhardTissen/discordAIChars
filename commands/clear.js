@@ -1,6 +1,13 @@
 import { getModel } from "../src/db.js";
 import { previousMessages } from "../src/ollama.js";
 
+/**
+ * Clear chat history for a model
+ * @param {string} restOfMessage - The rest of the message after the command
+ * @returns {string} - The response message
+ * @example !clear Ben
+ * @example !clear Ben 5
+ */
 export async function cmdClear(restOfMessage) {
 	const [idName, amount] = restOfMessage.split(' ');
 
@@ -18,6 +25,8 @@ export async function cmdClear(restOfMessage) {
 	const num = parseInt(amount);
 	if (isNaN(num)) return '### Please specify a valid number of messages to clear'
 
+	// Remove last message pair times the number specified
 	previousMessages[idName] = previousMessages[idName].slice(0, -num * 2);
+
 	return `### Last ${num} messages cleared for model "${idName}"`;
 }

@@ -1,7 +1,14 @@
+import { Message } from "discord.js";
 import { getAllModels } from "../src/db.js";
 
+/**
+ * Show a list of all available models, separated by whether the user owns them or not.
+ * @param {*} _ 
+ * @param {Message} message
+ * @returns {string} - The response message
+ * @example !list
+ */
 export async function cmdList(_, message) {
-	// List all models
 	const modelDataArr = await getAllModels();
 
 	if (!modelDataArr.length) return '### No models found';

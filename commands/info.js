@@ -1,8 +1,12 @@
 import { getModel } from "../src/db.js";
 
-export async function cmdInfo(restOfMessage) {
-	const idName = restOfMessage;
-
+/**
+ * Show various information about a model.
+ * @param {string} idName 
+ * @returns {string} - The response message
+ * @example !info Ben
+ */
+export async function cmdInfo(idName) {
 	if (!idName) return '### Please specify a model to show info'
 
 	const row = await getModel(idName);

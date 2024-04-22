@@ -1,5 +1,13 @@
 import { displaySettings, resetSettings, updateSetting } from "../src/settings.js";
 
+/**
+ * Display or update model settings.
+ * @param {string} restOfMessage 
+ * @returns {string} - The response message
+ * @example !settings
+ * @example !settings reset
+ * @example !settings temperature 0.5
+ */
 export async function cmdSettings(restOfMessage) {
 	const [key, value] = restOfMessage.split(' ');
 

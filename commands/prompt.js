@@ -1,7 +1,15 @@
-import { db, getModel, updateField } from "../src/db.js";
+import { Message } from "discord.js";
+import { getModel, updateField } from "../src/db.js";
 
+/**
+ * Show or edit the prompt for a model
+ * @param {string} restOfMessage - The message after the command.
+ * @param {Message} message 
+ * @returns {string} - The response message
+ * @example !prompt Ben
+ * @example !prompt Ben You are ben, a detective in a small town...
+ */
 export async function cmdPrompt(restOfMessage, message) {
-	// Example: !prompt Ben
 	const [idName, ...prompt] = restOfMessage.split(' ');
 
 	if (!idName) return '### Please specify a model to show or edit the prompt'

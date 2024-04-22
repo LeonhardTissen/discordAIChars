@@ -1,5 +1,13 @@
+import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
 
+/**
+ * Change the avatar of a model, if the model is owned by the user
+ * @param {string} restOfMessage 
+ * @param {Message} message 
+ * @returns {string} - The response message
+ * @example !avatar Ben https://example.com/avatar.png
+ */
 export async function cmdAvatar(restOfMessage, message) {
 	const [idName, avatar] = restOfMessage.split(' ');
 
