@@ -6,7 +6,7 @@ import { getOrCreateWebhook } from './src/webhook.js';
 import { defaultChannelModel, talkToModel } from './src/ollama.js';
 import { channel, setChannel } from './src/channel.js';
 import { hasPendingMessage, processPendingMessages } from './src/pending.js';
-import { commands, getCallbackByCommand } from './registrar.js';
+import { getCallbackByCommand } from './registrar.js';
 import './commands.js';
 
 // Discord bot setup
