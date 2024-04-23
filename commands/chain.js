@@ -26,9 +26,7 @@ async function cmdChain(restOfMessage) {
 
 	for (const modelName of modelNames) {
 		prompt = await talkToModel(prompt, modelName);
-		if (!prompt) {
-			return `### Model ${modelName} failed to respond.`;
-		}
+		if (!prompt) return `### Model ${modelName} failed to respond.`;
 	}
 }
 
