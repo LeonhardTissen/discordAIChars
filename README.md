@@ -8,6 +8,7 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 
 - Switch between different AI models that are created by users
 - Send AI-generated messages via webhooks
+- Have multiple models talking to each other
 
 ## Commands 📜
 
@@ -23,7 +24,7 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 1. Clone the repository
 
 ```sh
-git clone https://github.com/LeonhardTissen/discordAIChars.git`
+git clone https://github.com/LeonhardTissen/discordAIChars.git
 ```
 
 2. Change into the directory
