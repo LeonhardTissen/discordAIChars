@@ -32,7 +32,7 @@ async function cmdPrompt(restOfMessage, message) {
 
 	const { owner } = row;
 
-	if (canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
+	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 
 	try {
 		await updateField(idName, 'model', promptString);
