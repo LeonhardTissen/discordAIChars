@@ -1,8 +1,7 @@
 import { registerCommand } from "../registrar.js";
 import { talkToModel } from "../src/ollama.js";
 
-// TODO: Move to a configurable value
-const maximumModelChain = 5;
+const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;
 
 /**
  * Chain multiple models together, feeding the output of one model to the next.
