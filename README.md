@@ -44,11 +44,12 @@ npm install
 5. Copy `example.env` to `.env` and fill in the required values
 
 ```env
-BOT_TOKEN=your_discord_bot_token
-CHANNEL_ID=your_channel_id
+BOT_TOKEN=YourBotTokenHere
+CHANNEL_ID=YourChannelIdHere
 BASE_MODEL=llama3
 PREFIX=!
 MAXIMUM_MODEL_CHAIN=5
+ADMIN_ID=YourDiscordUserIdHere
 ```
 
 6. Download the model of your choice from [Ollama](https://ollama.com/library), example: `ollama run llama3`. The model in your .env must have been downloaded before running the bot

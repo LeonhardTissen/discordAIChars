@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
 import { registerCommand } from "../registrar.js";
+import { canModify } from "../src/permissions.js";
 
 /**
  * Transfer ownership of a model to another user.
@@ -24,7 +25,7 @@ async function cmdTransfer(restOfMessage, message) {
 
 	if (!modelData) return `### Model with name "${idName}" not found`
 
-	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
+	if (canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 
 	// Transfer ownership
 	try {

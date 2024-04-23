@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { deleteModel, getModel } from "../src/db.js";
 import { registerCommand } from "../registrar.js";
+import { canModify } from "../src/permissions.js";
 
 /**
  * Delete a model, if the model is owned by the user
@@ -18,7 +19,7 @@ async function cmdDelete(idName, message) {
 
 	const { owner } = modelData;
 
-	if (owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
+	if (canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 
 	await deleteModel(idName);
 

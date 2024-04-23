@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
 import { registerCommand } from "../registrar.js";
+import { canModify } from "../src/permissions.js";
 
 /**
  * Show or edit the prompt for a model
@@ -29,7 +30,9 @@ async function cmdPrompt(restOfMessage, message) {
 
 	if (!row) return `### Model with name "${idName}" not found`
 
-	if (row.owner !== message.author.id) return `### You do not own the model with the name "${idName}"`
+	const { owner } = row;
+
+	if (canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 
 	try {
 		await updateField(idName, 'model', promptString);
