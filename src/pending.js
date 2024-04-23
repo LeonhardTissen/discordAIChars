@@ -26,6 +26,7 @@ async function pendingEnterName(pendingMessage, content) {
 		await channel.send(`### Name sanitized to "${pendingMessage.data.idName}" but still displayed as "${pendingMessage.data.displayName}"`);
 	}
 	pendingMessage.state = 'enter_avatar';
+	return '### Enter avatar URL:';
 }
 
 async function pendingEnterAvatar(pendingMessage, content) {
