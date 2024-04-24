@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { addPendingMessage } from "../src/pending.js";
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 
 /**
  * Start the process of creating a new model. The user will be asked for a name, avatar and prompt.

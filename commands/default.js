@@ -1,4 +1,4 @@
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 import { getModel } from "../src/db.js";
 import { resetDefaultChannelModel, setDefaultChannelModel } from "../src/ollama.js";
 

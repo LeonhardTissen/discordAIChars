@@ -1,4 +1,4 @@
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 
 const BASE_MODEL = process.env.BASE_MODEL;
 

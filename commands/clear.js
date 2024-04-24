@@ -1,4 +1,4 @@
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 import { getModel } from "../src/db.js";
 import { previousMessages } from "../src/ollama.js";
 

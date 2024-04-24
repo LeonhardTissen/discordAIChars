@@ -1,7 +1,7 @@
 
 import cluster from 'cluster'
 
-import { startBot } from './bot.js'
+import { startBot } from './src/bot.js'
 
 if (cluster.isPrimary) {
     cluster.fork();

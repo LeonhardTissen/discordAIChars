@@ -1,4 +1,4 @@
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 import { talkToModel } from "../src/ollama.js";
 
 const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;

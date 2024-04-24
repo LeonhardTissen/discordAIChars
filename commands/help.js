@@ -1,5 +1,5 @@
 import { format } from "../src/formatter.js";
-import { registerCommand, commands, categoryNames } from "../registrar.js";
+import { registerCommand, commands, categoryNames } from "../src/registrar.js";
 
 /**
  * Display help text.

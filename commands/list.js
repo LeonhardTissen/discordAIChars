@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { getAllModels } from "../src/db.js";
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 
 /**
  * Show a list of all available models, separated by whether the user owns them or not.

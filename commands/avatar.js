@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 import { canModify } from "../src/permissions.js";
 
 /**

@@ -1,11 +1,11 @@
 import 'dotenv/config'
 
-import { client } from './src/client.js';
-import { isIgnored } from './src/ignore.js';
-import { getOrCreateWebhook } from './src/webhook.js';
-import { defaultChannelModel, talkToModel } from './src/ollama.js';
-import { channel, setChannel } from './src/channel.js';
-import { hasPendingMessage, processPendingMessages } from './src/pending.js';
+import { client } from './client.js';
+import { isIgnored } from './ignore.js';
+import { getOrCreateWebhook } from './webhook.js';
+import { defaultChannelModel, talkToModel } from './ollama.js';
+import { channel, setChannel } from './channel.js';
+import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
 import './commands.js';
 

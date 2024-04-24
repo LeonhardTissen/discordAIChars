@@ -1,4 +1,4 @@
-import { registerCommand } from "../registrar.js";
+import { registerCommand } from "../src/registrar.js";
 import { displaySettings, resetSettings, updateSetting } from "../src/settings.js";
 
 /**
