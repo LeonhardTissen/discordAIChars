@@ -7,7 +7,7 @@ import { webhook, currentWebhookModel } from './webhook.js';
 import { filterOutput } from './filter.js';
 import { channel } from './channel.js';
 
-const BASE_MODEL = process.env.BASE_MODEL;
+const { BASE_MODEL } = process.env;
 
 export let defaultChannelModel = null;
 

@@ -1,6 +1,8 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
+import { setChannel } from './channel.js';
+import { getOrCreateWebhook } from './webhook.js';
 
-const PREFIX = process.env.PREFIX;
+const { PREFIX, CHANNEL_ID } = process.env;
 
 export const client = new Client({
 	intents: Object.values(GatewayIntentBits),
@@ -9,6 +11,9 @@ export const client = new Client({
 
 client.once('ready', async () => {
     console.log('Bot is online!');
+
+	setChannel(client.channels.cache.get(CHANNEL_ID));
+	await getOrCreateWebhook();
 
 	// Set the bot's status
 	client.user.setPresence({ 

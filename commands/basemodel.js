@@ -1,6 +1,6 @@
 import { registerCommand } from "../src/registrar.js";
 
-const BASE_MODEL = process.env.BASE_MODEL;
+const { BASE_MODEL } = process.env;
 
 /**
  * Returns the base model

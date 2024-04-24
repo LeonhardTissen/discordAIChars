@@ -1,4 +1,4 @@
-const PREFIX = process.env.PREFIX;
+const { PREFIX } = process.env;
 
 const codeMappings = {
 	'$!': PREFIX,

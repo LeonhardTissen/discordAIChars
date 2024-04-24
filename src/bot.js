@@ -2,22 +2,14 @@ import 'dotenv/config'
 
 import { client } from './client.js';
 import { isIgnored } from './ignore.js';
-import { getOrCreateWebhook } from './webhook.js';
 import { defaultChannelModel, talkToModel } from './ollama.js';
-import { channel, setChannel } from './channel.js';
+import { channel } from './channel.js';
 import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
 import './commands.js';
 
 // Discord bot setup
-const BOT_TOKEN = process.env.BOT_TOKEN;
-const CHANNEL_ID = process.env.CHANNEL_ID;
-const PREFIX = process.env.PREFIX;
-
-client.once('ready', async () => {
-	setChannel(client.channels.cache.get(CHANNEL_ID));
-	await getOrCreateWebhook();
-});
+const { BOT_TOKEN, PREFIX } = process.env;
 
 client.on('messageCreate', async (message) => {
 	// Prevent bot from responding to itself

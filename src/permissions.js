@@ -1,5 +1,5 @@
 
-const ADMIN_ID = process.env.ADMIN_ID;
+const { ADMIN_ID } = process.env;
 
 export function canModify(author, owner) {
 	// If the author is admin, they can modify any model
