@@ -4,7 +4,7 @@ const PREFIX = process.env.PREFIX;
 
 export const client = new Client({
 	intents: Object.values(GatewayIntentBits),
-	partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember],
+	partials: [Partials.Message],
 });
 
 client.once('ready', async () => {

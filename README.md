@@ -39,7 +39,7 @@ cd discordAIChars
 npm install
 ```
 
-4. Create a [Discord bot](https://discord.com/developers/applications) and invite it to your server. Make sure it has the `Manage Webhooks` permission and all available intents are enabled
+4. Create a [Discord bot](https://discord.com/developers/applications) and invite it to your server. Make sure it has the `Manage Webhooks` permission and the message intent enabled
 
 5. Copy `example.env` to `.env` and fill in the required values
 
