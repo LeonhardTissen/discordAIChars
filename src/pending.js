@@ -18,7 +18,7 @@ export function hasPendingMessage(userId) {
 async function pendingEnterName(pendingMessage, content) {
 	if (content.length < 3 || content.length > 64) return '### Name must be 3-64 characters long';
 
-	if (content === 'random') return '### Name cannot be "random"';
+	if (content.toLowerCase() === 'random') return '### Name cannot be "random"';
 
 	// Webhook names cannot contain "Discord"
 	content = content.replace(/Discord/gi, 'Disc0rd');
