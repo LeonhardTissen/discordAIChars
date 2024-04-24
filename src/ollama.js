@@ -21,7 +21,7 @@ export function resetDefaultChannelModel() {
 
 let isGenerating = false;
 
-export let previousMessages = {};
+export const previousMessages = {};
 
 const messageUpdateInterval = 1000; // in ms
 const messageCursor = '▌';
@@ -67,6 +67,8 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	const { profile, displayname, model, idname } = modelData;
 
+	const lowerIdName = idname.toLowerCase();
+
 	await updateWebhookIfNecessary(profile, displayname);
 
 	// Lock out new messages from being processed while generating
@@ -90,7 +92,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	});
 
 	// Previous messages the AI & user have sent
-	previousMessages[idname]?.forEach((message) => {
+	previousMessages[lowerIdName]?.forEach((message) => {
 		messages.push(message);
 	});
 
@@ -134,11 +136,11 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 		process.stdout.write('\n');
 	
 		// Save the previous messages (Ensure the array exists)
-		if (!previousMessages[idname]) {
-			previousMessages[idname] = [];
+		if (!previousMessages[lowerIdName]) {
+			previousMessages[lowerIdName] = [];
 		}
 	
-		previousMessages[idname].push({
+		previousMessages[lowerIdName].push({
 			role: 'user',
 			content: userInput,
 		}, {

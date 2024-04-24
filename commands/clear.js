@@ -18,8 +18,10 @@ async function cmdClear(restOfMessage) {
 
 	if (!modelData) return `### Model with name "${idName}" not found`
 
+	const lowerIdName = idName.toLowerCase();
+
 	if (!amount) {
-		previousMessages[idName] = [];
+		previousMessages[lowerIdName] = [];
 		return `### Chat history for model "${idName}" cleared`
 	}
 
@@ -27,7 +29,7 @@ async function cmdClear(restOfMessage) {
 	if (isNaN(num)) return '### Please specify a valid number of messages to clear'
 
 	// Remove last message pair times the number specified
-	previousMessages[idName] = previousMessages[idName].slice(0, -num * 2);
+	previousMessages[lowerIdName] = previousMessages[lowerIdName].slice(0, -num * 2);
 
 	return `### Last ${num} messages cleared for model "${idName}"`;
 }
