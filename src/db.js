@@ -31,6 +31,18 @@ export async function getModel(idName) {
 	});
 }
 
+export async function getRandomModel() {
+	return new Promise((resolve, reject) => {
+		db.get('SELECT * FROM models ORDER BY RANDOM() LIMIT 1', (err, row) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(row);
+			}
+		});
+	});
+}
+
 export async function updateField(idName, field, value) {
 	return new Promise((resolve, reject) => {
 		db.run(`UPDATE models SET ${field} = ? WHERE idname = ? COLLATE NOCASE`, [value, idName], (err) => {

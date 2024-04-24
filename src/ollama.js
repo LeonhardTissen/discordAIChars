@@ -1,7 +1,7 @@
 import ollama from 'ollama';
 import fs from 'fs';
 
-import { getModel } from './db.js';
+import { getModel, getRandomModel } from './db.js';
 import { getParameters, settings } from './settings.js';
 import { webhook, currentWebhookModel } from './webhook.js';
 import { filterOutput } from './filter.js';
@@ -54,8 +54,10 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	if (isGenerating && !settings.simultaneous_messages) {
 		return;
 	}
-	
-	const modelData = await getModel(modelName);
+
+	const isRandom = modelName.toLowerCase() === 'random';
+
+	const modelData = isRandom ? await getRandomModel() : await getModel(modelName);
 
 	// Check if model exists
 	if (!modelData) {
@@ -75,7 +77,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	// Log the prompt
 	console.log(`User: ${userInput}`);
-	process.stdout.write(`${modelName}: `);
+	process.stdout.write(`${displayname}: `);
 
 
 	// Add the previous messages to the model
