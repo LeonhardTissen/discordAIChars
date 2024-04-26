@@ -13,13 +13,16 @@ import { canModify } from "../src/permissions.js";
 async function cmdAvatar(restOfMessage, message) {
 	const [idName, avatar] = restOfMessage.split(' ');
 
-	if (!idName || !avatar) return '### Please specify a model and an avatar URL'
+	if (!idName) return '### Please specify a model'
 
-	// Check if owner
 	const modelData = await getModel(idName);
 
 	if (!modelData) return `### Model with name "${idName}" not found`
 
+	// New avatar not provided, return current avatar
+	if (!avatar) return `### Avatar for model "${idName}": \n${modelData.profile}`
+
+	// Check if owner
 	const { owner } = modelData;
 
 	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`

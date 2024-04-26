@@ -1,5 +1,4 @@
 .env
 node_modules
-database.db
-webhook.json
-settings.json
+*.db
+*.json
