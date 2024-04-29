@@ -52,8 +52,17 @@ MAXIMUM_MODEL_CHAIN=5
 ADMIN_ID=YourDiscordUserIdHere
 ```
 
-6. Download the model of your choice from [Ollama](https://ollama.com/library), example: `ollama run llama3`. The model in your .env must have been downloaded before running the bot
-7. Run the bot with `node main`
+6. Download the model of your choice from [Ollama](https://ollama.com/library), for example:
+
+```sh
+ollama pull llama3
+```
+
+7. Run the bot
+
+```sh
+node main
+```
 
 ## Get started 🚀
 
