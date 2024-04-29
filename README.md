@@ -36,7 +36,7 @@ cd discordAIChars
 3. Install the dependencies
 
 ```sh
-npm install
+npm i
 ```
 
 4. Create a [Discord bot](https://discord.com/developers/applications) and invite it to your server. Make sure it has the `Manage Webhooks` permission and the message intent enabled
@@ -53,7 +53,7 @@ ADMIN_ID=YourDiscordUserIdHere
 ```
 
 6. Download the model of your choice from [Ollama](https://ollama.com/library), example: `ollama run llama3`. The model in your .env must have been downloaded before running the bot
-7. Run the bot with `node main.js`
+7. Run the bot with `node main`
 
 ## Get started 🚀
 
