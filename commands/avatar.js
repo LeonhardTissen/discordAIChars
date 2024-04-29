@@ -2,6 +2,7 @@ import { Message } from "discord.js";
 import { getModel, updateField } from "../src/db.js";
 import { registerCommand } from "../src/registrar.js";
 import { canModify } from "../src/permissions.js";
+import { isValidImageUrl } from "../src/url.js";
 
 /**
  * Change the avatar of a model, if the model is owned by the user
@@ -24,6 +25,9 @@ async function cmdAvatar(restOfMessage, message) {
 
 	// Check if owner
 	const { owner } = modelData;
+
+	// Check if valid URL
+	if (!isValidImageUrl(avatar)) return '### Invalid URL, please provide a valid URL'
 
 	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 

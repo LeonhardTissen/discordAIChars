@@ -1,5 +1,6 @@
 import { channel } from "./channel.js";
 import { addModel, getModel } from "./db.js";
+import { isValidImageUrl } from "./url.js";
 
 export let pendingMessages = [];
 
@@ -35,7 +36,8 @@ async function pendingEnterName(pendingMessage, content) {
 }
 
 async function pendingEnterAvatar(pendingMessage, content) {
-	if (!content.startsWith('http')) return '### Invalid URL, please provide a valid URL';
+	// Check if valid URL
+	if (!isValidImageUrl(content)) return '### Invalid URL, please provide a valid URL';
 
 	pendingMessage.data.avatar = content;
 	pendingMessage.state = 'enter_prompt';
