@@ -21,7 +21,7 @@ export function resetDefaultChannelModel() {
 
 let isGenerating = false;
 
-let isForceStopped = false;
+export let isForceStopped = false;
 
 export function forceStop() {
 	isForceStopped = true;
