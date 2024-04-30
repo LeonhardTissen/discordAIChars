@@ -21,6 +21,12 @@ export function resetDefaultChannelModel() {
 
 let isGenerating = false;
 
+let isForceStopped = false;
+
+export function forceStop() {
+	isForceStopped = true;
+}
+
 export const previousMessages = {};
 
 const messageUpdateInterval = 1000; // in ms
@@ -73,6 +79,9 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	// Lock out new messages from being processed while generating
 	isGenerating = true;
+
+	// Reset force stop flag
+	isForceStopped = false;
 
 	// Initialize webhook message for editing during generation
 	const webhookMessage = await webhook.send(messageCursor);
@@ -127,6 +136,10 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 			result += part.message.content;
 	
 			process.stdout.write(part.message.content);
+
+			if (isForceStopped) {
+				break;
+			}
 		}
 	
 		clearInterval(interval);

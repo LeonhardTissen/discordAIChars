@@ -13,3 +13,4 @@ import '../commands/list.js';
 import '../commands/prompt.js';
 import '../commands/settings.js';
 import '../commands/transfer.js';
+import '../commands/stop.js';
