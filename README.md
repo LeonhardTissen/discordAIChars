@@ -46,7 +46,7 @@ npm i
 ```env
 BOT_TOKEN=YourBotTokenHere
 CHANNEL_ID=YourChannelIdHere
-BASE_MODEL=llama3
+BASE_MODEL=dolphin-llama3
 PREFIX=!
 MAXIMUM_MODEL_CHAIN=5
 ADMIN_ID=YourDiscordUserIdHere
@@ -55,7 +55,7 @@ ADMIN_ID=YourDiscordUserIdHere
 6. Download the model of your choice from [Ollama](https://ollama.com/library), for example:
 
 ```sh
-ollama pull llama3
+ollama pull dolphin-llama3
 ```
 
 7. Run the bot

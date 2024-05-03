@@ -8,7 +8,7 @@ const { BASE_MODEL } = process.env;
  * @example !basemodel
  */
 function cmdBasemodel() {
-	return `### Base model: ${BASE_MODEL}`
+	return `### Base model: [${BASE_MODEL}](https://ollama.com/library/${BASE_MODEL})`
 }
 
 registerCommand('basemodel', cmdBasemodel, 'Other', 'Returns the base model');
