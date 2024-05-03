@@ -36,7 +36,7 @@ function cmdHelp(searchTerm) {
 			const formattedParameters = parameters ? ` $g${parameters}` : '';
 			const formattedDescription = description ? `$x: $w${description}` : '';
 			// Ex: - !transfer [name] [user]: Transfer ownership of a model to another user
-			return `- ${formattedCommand}${formattedParameters}${formattedDescription}`;
+			return `$w- ${formattedCommand}${formattedParameters}${formattedDescription}`;
 		}).join('\n');
 
 		return `$t${categoryNames[category]}:\n${allCommandsInCategory}\n`;
