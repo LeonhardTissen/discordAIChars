@@ -1,6 +1,6 @@
 import { registerCommand } from "../src/registrar.js";
 import { getModel } from "../src/db.js";
-import { resetDefaultChannelModel, setDefaultChannelModel } from "../src/ollama.js";
+import { resetDefaultChannelModel, setDefaultChannelModel } from "../src/ollama/defaultmodel.js";
 
 /**
  * Set a model as the default model for the channel, or clear the default model.

@@ -1,6 +1,6 @@
 import { registerCommand } from "../src/registrar.js";
 import { getModel } from "../src/db.js";
-import { previousMessages } from "../src/ollama.js";
+import { clearAllMessages, clearLastMessagesFrom, clearMessagesFrom } from "../src/ollama/previousmessages.js";
 
 /**
  * Clear chat history for a model
@@ -13,9 +13,7 @@ async function cmdClear(restOfMessage) {
 	const [idName, amount] = restOfMessage.split(' ');
 
 	if (idName === 'all') {
-		for (const key in previousMessages) {
-			previousMessages[key] = [];
-		}
+		clearAllMessages();
 		return '### Chat history for all models cleared';
 	}
 
@@ -28,15 +26,14 @@ async function cmdClear(restOfMessage) {
 	const lowerIdName = idName.toLowerCase();
 
 	if (!amount) {
-		previousMessages[lowerIdName] = [];
+		clearMessagesFrom(lowerIdName);
 		return `### Chat history for model "${idName}" cleared`
 	}
 
 	const num = parseInt(amount);
 	if (isNaN(num)) return '### Please specify a valid number of messages to clear'
 
-	// Remove last message pair times the number specified
-	previousMessages[lowerIdName] = previousMessages[lowerIdName].slice(0, -num * 2);
+	clearLastMessagesFrom(lowerIdName, num);
 
 	return `### Last ${num} messages cleared for model "${idName}"`;
 }

@@ -1,34 +1,18 @@
 import ollama from 'ollama';
 import fs from 'fs';
 
-import { getModel, getRandomModel } from './db.js';
-import { getParameters, settings } from './settings.js';
-import { webhook, currentWebhookModel } from './webhook.js';
-import { filterOutput } from './filter.js';
-import { channel } from './channel.js';
-import { FgBlue, FgCyan, FgYellow } from './consolecolors.js';
+import { getModel, getRandomModel } from '../db.js';
+import { getParameters, settings } from '../settings.js';
+import { webhook, currentWebhookModel } from '../webhook.js';
+import { filterOutput } from '../filter.js';
+import { channel } from '../channel.js';
+import { FgBlue, FgCyan, FgYellow } from '../consolecolors.js';
+import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
+import { isForceStopped, resetForceStop } from './forcestop.js';
 
 const { BASE_MODEL } = process.env;
 
-export let defaultChannelModel = null;
-
-export function setDefaultChannelModel(model) {
-	defaultChannelModel = model;
-}
-
-export function resetDefaultChannelModel() {
-	defaultChannelModel = null;
-}
-
 let isGenerating = false;
-
-export let isForceStopped = false;
-
-export function forceStop() {
-	isForceStopped = true;
-}
-
-export const previousMessages = {};
 
 const messageUpdateInterval = 1000; // in ms
 const messageCursor = '▌';
@@ -58,9 +42,8 @@ async function updateWebhookIfNecessary(avatar, displayName) {
 }
 
 export async function talkToModel(userInput, modelName = defaultChannelModel) {
-	if (isGenerating && !settings.simultaneous_messages) {
-		return;
-	}
+	// Prevent any other incoming messages from being processed while generating
+	if (isGenerating && !settings.simultaneous_messages) return;
 
 	const isRandom = modelName.toLowerCase() === 'random';
 
@@ -68,7 +51,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	// Check if model exists
 	if (!modelData) {
-		await channel.send(`Model with name "${modelName}" not found`);
+		await channel.send(`### Model with name "${modelName}" not found`);
 		return;
 	}
 
@@ -85,11 +68,11 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	const startedGenerating = Date.now();
 
-	// Reset force stop flag
-	isForceStopped = false;
+	resetForceStop();
 
 	// Initialize webhook message for editing during generation
 	const webhookMessage = await webhook.send(messageCursor);
+	const webhookMessageId = webhookMessage.id;
 
 	// Log the prompt
 	console.log(`${FgCyan}User: ${userInput}`);
@@ -97,7 +80,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 
 	// Add the previous messages to the model
-	const messages = [];
+	let messages = [];
 
 	// System message
 	messages.push({
@@ -106,9 +89,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	});
 
 	// Previous messages the AI & user have sent
-	previousMessages[lowerIdName]?.forEach((message) => {
-		messages.push(message);
-	});
+	messages = messages.concat(getAllMessagesFrom(lowerIdName));
 
 	// New message from the user
 	messages.push({
@@ -117,20 +98,22 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	});
 
 	try {
-		// Send the previous messages to the model
+		// Initiate the chat with the model
 		const response = await ollama.chat({ 
 			model: BASE_MODEL, 
 			messages,
 			stream: true,
 			options: getParameters()
 		});
-		let result = '';
+		let generatedResult = '';
 	
-	
-		// Update the message with the model's responses every second
+		// Update the webhook message with the model's responses every second
 		const interval = setInterval(() => {
-			webhook.editMessage(webhookMessage.id, { 
-				content: filterOutput(result) + messageCursor,
+			// Don't cause any updates if nothing has been generated yet
+			if (!generatedResult) return;
+
+			webhook.editMessage(webhookMessageId, { 
+				content: filterOutput(generatedResult) + messageCursor,
 			});
 		}, messageUpdateInterval);
 	
@@ -138,42 +121,31 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 		for await (const part of response) {
 			if (!part.message?.content) continue;
 	
-			result += part.message.content;
+			generatedResult += part.message.content;
 	
 			process.stdout.write(part.message.content);
 
-			if (isForceStopped) {
-				break;
-			}
+			if (isForceStopped) break;
 		}
 	
 		clearInterval(interval);
 	
-		await webhook.editMessage(webhookMessage.id, { content: filterOutput(result) });
+		await webhook.editMessage(webhookMessageId, { content: filterOutput(generatedResult) });
 	
 		process.stdout.write('\n');
 	
-		// Save the previous messages (Ensure the array exists)
-		if (!previousMessages[lowerIdName]) {
-			previousMessages[lowerIdName] = [];
-		}
-	
-		previousMessages[lowerIdName].push({
-			role: 'user',
-			content: userInput,
-		}, {
-			role: 'assistant',
-			content: result,
-		});
+		// Save the messages in the models message history
+		addMessagesTo(lowerIdName, userInput, generatedResult);
 	
 		isGenerating = false;
 
+		// Log the time it took to generate the response along with the words per minute
 		const timeToGenerate = (Date.now() - startedGenerating) / 1000;
-		const wordsPerMinute = Math.round((result.split(' ').length / timeToGenerate) * 60);
+		const wordsPerMinute = Math.round((generatedResult.split(' ').length / timeToGenerate) * 60);
 
 		console.log(`${FgBlue}Time to generate: ${timeToGenerate}s, Words per minute: ${wordsPerMinute}`);
 
-		return result;
+		return generatedResult;
 	} catch (err) {
 		console.error(err);
 		await channel.send(`### ${modelName} tragically died while generating a response.\n\n\`${err.message}\``);

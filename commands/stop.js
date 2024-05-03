@@ -1,4 +1,4 @@
-import { forceStop } from "../src/ollama.js";
+import { forceStop } from "../src/ollama/forcestop.js";
 import { registerCommand } from "../src/registrar.js";
 
 /**

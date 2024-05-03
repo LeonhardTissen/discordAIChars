@@ -1,5 +1,5 @@
 import { registerCommand } from "../src/registrar.js";
-import { talkToModel } from "../src/ollama.js";
+import { talkToModel } from "../src/ollama/chat.js";
 
 /**
  * Ask the model a question directly.

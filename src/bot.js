@@ -2,11 +2,12 @@ import 'dotenv/config'
 
 import { client } from './client.js';
 import { isIgnored } from './ignore.js';
-import { defaultChannelModel, talkToModel } from './ollama.js';
+import { talkToModel } from './ollama/chat.js';
 import { channel } from './channel.js';
 import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
 import './commands.js';
+import { defaultChannelModel } from './ollama/defaultmodel.js';
 
 // Discord bot setup
 const { BOT_TOKEN, PREFIX } = process.env;

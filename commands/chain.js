@@ -1,5 +1,6 @@
 import { registerCommand } from "../src/registrar.js";
-import { isForceStopped, talkToModel } from "../src/ollama.js";
+import { talkToModel } from "../src/ollama/chat.js";
+import { isForceStopped } from "../src/ollama/forcestop.js";
 
 const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;
 
