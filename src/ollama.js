@@ -6,6 +6,7 @@ import { getParameters, settings } from './settings.js';
 import { webhook, currentWebhookModel } from './webhook.js';
 import { filterOutput } from './filter.js';
 import { channel } from './channel.js';
+import { FgBlue, FgCyan, FgYellow } from './consolecolors.js';
 
 const { BASE_MODEL } = process.env;
 
@@ -78,7 +79,11 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	await updateWebhookIfNecessary(profile, displayname);
 
 	// Lock out new messages from being processed while generating
-	isGenerating = true;
+	if (!settings.simultaneous_messages) {
+		isGenerating = true;
+	}
+
+	const startedGenerating = Date.now();
 
 	// Reset force stop flag
 	isForceStopped = false;
@@ -87,8 +92,8 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	const webhookMessage = await webhook.send(messageCursor);
 
 	// Log the prompt
-	console.log(`User: ${userInput}`);
-	process.stdout.write(`${displayname}: `);
+	console.log(`${FgCyan}User: ${userInput}`);
+	process.stdout.write(`${FgYellow}${displayname}: `);
 
 
 	// Add the previous messages to the model
@@ -162,6 +167,11 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 		});
 	
 		isGenerating = false;
+
+		const timeToGenerate = (Date.now() - startedGenerating) / 1000;
+		const wordsPerMinute = Math.round((result.split(' ').length / timeToGenerate) * 60);
+
+		console.log(`${FgBlue}Time to generate: ${timeToGenerate}s, Words per minute: ${wordsPerMinute}`);
 
 		return result;
 	} catch (err) {
