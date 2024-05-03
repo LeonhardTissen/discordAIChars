@@ -1,5 +1,6 @@
 import { registerCommand } from "../src/registrar.js";
 import { getModel } from "../src/db.js";
+import { channel } from "../src/channel.js";
 
 /**
  * Show various information about a model.
@@ -16,10 +17,13 @@ async function cmdInfo(idName) {
 	
 	const { displayname, owner, model, profile } = row;
 
-	return `### Model info for "${displayname}":
-- Avatar: ${profile}
-- Owner: ${owner}
-- Prompt: ${model}`
+	channel.send({
+		content: `### Model info for "${displayname}":
+		- Owner: ${owner}
+		- Prompt: ${model}`,
+		files: [profile]
+	});
+	return;
 }
 
 registerCommand('info', cmdInfo, 'Browse', 'Show various information about a model', '[name]');

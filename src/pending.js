@@ -1,6 +1,6 @@
+import { saveAvatar } from "./avatar.js";
 import { channel } from "./channel.js";
 import { addModel, getModel } from "./db.js";
-import { isValidImageUrl } from "./url.js";
 
 export let pendingMessages = [];
 
@@ -16,7 +16,7 @@ export function hasPendingMessage(userId) {
 	return pendingMessages.some(m => m.user === userId);
 }
 
-async function pendingEnterName(pendingMessage, content) {
+async function pendingEnterName({ pendingMessage, content }) {
 	if (content.length < 3 || content.length > 64) return '### Name must be 3-64 characters long';
 
 	if (content.toLowerCase() === 'random') return '### Name cannot be "random"';
@@ -24,7 +24,7 @@ async function pendingEnterName(pendingMessage, content) {
 	// Webhook names cannot contain "Discord"
 	content = content.replace(/Discord/gi, 'Disc0rd');
 	
-	if (await getModel(content)) return '### Name already taken, please choose another';
+	if (await getModel(content)) return '### Name already taken, choose another';
 
 	pendingMessage.data.displayName = content;
 	pendingMessage.data.idName = content.replace(/\s/g, '');
@@ -32,27 +32,32 @@ async function pendingEnterName(pendingMessage, content) {
 		await channel.send(`### Name sanitized to "${pendingMessage.data.idName}" but still displayed as "${pendingMessage.data.displayName}"`);
 	}
 	pendingMessage.state = 'enter_avatar';
-	return '### Enter avatar URL:';
+	return '### Upload avatar as attachment:';
 }
 
-async function pendingEnterAvatar(pendingMessage, content) {
+async function pendingEnterAvatar({ pendingMessage, message }) {
 	// Check if valid URL
-	if (!isValidImageUrl(content)) return '### Invalid URL, please provide a valid URL';
+	if (message.attachments.size === 0) return '### Upload an image';
 
-	pendingMessage.data.avatar = content;
+	pendingMessage.data.attachment = message.attachments.first();
 	pendingMessage.state = 'enter_prompt';
 	return '### Enter prompt:';
 }
 
-async function pendingEnterPrompt(pendingMessage, content, author) {
+async function pendingEnterPrompt({ pendingMessage, content, author }) {
 	if (content.length < 32) return '### Prompt must be at least 32 characters long';
 
 	pendingMessage.data.prompt = content;
 
-	const { displayName, idName, avatar, prompt } = pendingMessage.data;
+	const { displayName, idName, attachment, prompt } = pendingMessage.data;
 
-	// Save webhook to database
-	addModel(idName, displayName, prompt, author, avatar);
+	const lowerIdName = idName.toLowerCase();
+
+	// Save avatar to disk
+	const avatarPath = await saveAvatar(attachment, lowerIdName);
+
+	// Save model to database
+	addModel(idName, displayName, prompt, author, avatarPath);
 	
 	clearPendingMessages(author);
 
@@ -72,7 +77,7 @@ export async function processPendingMessages(message) {
 
 	if (content === 'cancel') {
 		clearPendingMessages(author);
-		await channel.send('### Cancelled');
+		await channel.send('### Canceled interaction');
 		return;
 	}
 
@@ -80,7 +85,7 @@ export async function processPendingMessages(message) {
 
 	const callback = stateCallbacks[pendingMessage.state];
 	if (callback) {
-		const response = await callback(pendingMessage, content, author);
+		const response = await callback({ pendingMessage, content, author, message });
 		if (response) channel.send(response);
 	}
 }
