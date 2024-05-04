@@ -12,6 +12,7 @@ import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel } from './basemodel.js';
 
 let isGenerating = false;
+let lastResponse = null;
 
 const messageUpdateInterval = 1000; // in ms
 const messageCursor = '▌';
@@ -72,6 +73,11 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	// Initialize webhook message for editing during generation
 	const webhookMessage = await webhook.send(messageCursor);
 	const webhookMessageId = webhookMessage.id;
+
+	// Use the last response if the user sends "last"
+	if (userInput.toLowerCase() === 'last') {
+		userInput = lastResponse;
+	}
 
 	// Log the prompt
 	console.log(`${FgCyan}User: ${userInput}`);
@@ -135,6 +141,9 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	
 		// Save the messages in the models message history
 		addMessagesTo(lowerIdName, userInput, generatedResult);
+
+		// Save the last response
+		lastResponse = generatedResult;
 	
 		isGenerating = false;
 

@@ -38,4 +38,4 @@ async function cmdClear(restOfMessage) {
 	return `### Last ${num} messages cleared for model "${idName}"`;
 }
 
-registerCommand('clear', cmdClear, 'Interact', 'Clear chat history for a model', '[name | all] [amount?]');
+registerCommand('clear', cmdClear, 'Interact', 'Clear chat history for a model', '[name | "all"] [amount?]');

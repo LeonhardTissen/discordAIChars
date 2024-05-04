@@ -25,4 +25,4 @@ async function cmdBasemodel(query, message) {
 	return `### Base model has been set to: [${baseModel}](https://ollama.com/library/${baseModel})`
 }
 
-registerCommand('basemodel', cmdBasemodel, 'Other', 'View or modify the current basemodel', '[model? | list?]');
+registerCommand('basemodel', cmdBasemodel, 'Other', 'View or modify the current basemodel', '[model? | "list"?]');

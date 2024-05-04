@@ -19,4 +19,4 @@ function cmdAsk(restOfMessage) {
 	talkToModel(promptString, idName);
 }
 
-registerCommand('ask', cmdAsk, 'Interact', 'Ask the model a question directly', '[name] [prompt]');
+registerCommand('ask', cmdAsk, 'Interact', 'Ask the model a question directly', '[name | "random"] [prompt | "last"]');

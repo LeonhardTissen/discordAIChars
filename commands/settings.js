@@ -27,4 +27,4 @@ async function cmdSettings(restOfMessage) {
 	return `### ${response}`
 }
 
-registerCommand('settings', cmdSettings, 'Settings', 'Display or update model settings', '[key] [value] | reset');
+registerCommand('settings', cmdSettings, 'Settings', 'Display or update model settings', '[key] [value] | "reset"');
