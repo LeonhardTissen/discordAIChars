@@ -1,6 +1,6 @@
-import { baseModel, getBaseModels, setBaseModel } from "../src/ollama/basemodel.js";
-import { isAdmin } from "../src/permissions.js";
-import { registerCommand } from "../src/registrar.js";
+import { baseModel, getBaseModels, setBaseModel } from "../ollama/basemodel.js";
+import { isAdmin } from "../permissions.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Returns the base model

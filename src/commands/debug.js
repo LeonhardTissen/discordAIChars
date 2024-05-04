@@ -1,6 +1,6 @@
-import { registerCommand } from "../src/registrar.js";
-import { FgWhite } from "../src/consolecolors.js";
-import { getAllMessages } from "../src/ollama/previousmessages.js";
+import { registerCommand } from "../registrar.js";
+import { FgWhite } from "../consolecolors.js";
+import { getAllMessages } from "../ollama/previousmessages.js";
 
 /**
  * Debug command to print previous messages.

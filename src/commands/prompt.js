@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
-import { getModel, updateField } from "../src/db.js";
-import { registerCommand } from "../src/registrar.js";
-import { canModify } from "../src/permissions.js";
+import { getModel, updateField } from "../db.js";
+import { registerCommand } from "../registrar.js";
+import { canModify } from "../permissions.js";
 
 /**
  * Show or edit the prompt for a model

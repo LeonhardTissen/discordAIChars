@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
-import { deleteModel, getModel } from "../src/db.js";
-import { registerCommand } from "../src/registrar.js";
-import { canModify } from "../src/permissions.js";
+import { deleteModel, getModel } from "../db.js";
+import { registerCommand } from "../registrar.js";
+import { canModify } from "../permissions.js";
 
 /**
  * Delete a model, if the model is owned by the user

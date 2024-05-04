@@ -1,9 +1,9 @@
 import { Message } from "discord.js";
-import { getModel, updateField } from "../src/db.js";
-import { registerCommand } from "../src/registrar.js";
-import { canModify } from "../src/permissions.js";
-import { saveAvatar } from "../src/avatar.js";
-import { channel } from "../src/channel.js";
+import { getModel, updateField } from "../db.js";
+import { registerCommand } from "../registrar.js";
+import { canModify } from "../permissions.js";
+import { saveAvatar } from "../avatar.js";
+import { channel } from "../channel.js";
 
 /**
  * Change the avatar of a model, if the model is owned by the user

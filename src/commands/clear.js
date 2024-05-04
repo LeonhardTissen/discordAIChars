@@ -1,6 +1,6 @@
-import { registerCommand } from "../src/registrar.js";
-import { getModel } from "../src/db.js";
-import { clearAllMessages, clearLastMessagesFrom, clearMessagesFrom } from "../src/ollama/previousmessages.js";
+import { registerCommand } from "../registrar.js";
+import { getModel } from "../db.js";
+import { clearAllMessages, clearLastMessagesFrom, clearMessagesFrom } from "../ollama/previousmessages.js";
 
 /**
  * Clear chat history for a model

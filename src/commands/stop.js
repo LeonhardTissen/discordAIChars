@@ -1,5 +1,5 @@
-import { forceStop } from "../src/ollama/forcestop.js";
-import { registerCommand } from "../src/registrar.js";
+import { forceStop } from "../ollama/forcestop.js";
+import { registerCommand } from "../registrar.js";
 
 /**
  * Stop the current generation

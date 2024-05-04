@@ -1,5 +1,5 @@
-import { registerCommand } from "../src/registrar.js";
-import { displaySettings, resetSettings, updateSetting } from "../src/settings.js";
+import { registerCommand } from "../registrar.js";
+import { displaySettings, resetSettings, updateSetting } from "../settings.js";
 
 /**
  * Display or update model settings.

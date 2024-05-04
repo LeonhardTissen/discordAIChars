@@ -1,6 +1,6 @@
-import { registerCommand } from "../src/registrar.js";
-import { getModel } from "../src/db.js";
-import { channel } from "../src/channel.js";
+import { registerCommand } from "../registrar.js";
+import { getModel } from "../db.js";
+import { channel } from "../channel.js";
 
 /**
  * Show various information about a model.
