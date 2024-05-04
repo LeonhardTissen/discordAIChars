@@ -20,10 +20,10 @@ async function cmdTransfer(restOfMessage, message) {
 
 	// Check if owner
 	const modelData = await getModel(idName);
-
-	const { owner } = modelData;
-
+	
 	if (!modelData) return `### Model with name "${idName}" not found`
+	
+	const { owner } = modelData;
 
 	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
 
