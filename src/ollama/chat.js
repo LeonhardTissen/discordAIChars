@@ -12,7 +12,7 @@ import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel } from './basemodel.js';
 
 let isGenerating = false;
-let lastResponse = null;
+let lastResponse = 'Introduce yourself';
 
 const messageUpdateInterval = 1000; // in ms
 const messageCursor = '▌';
