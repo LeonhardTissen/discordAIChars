@@ -19,7 +19,13 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 - [Node.js](https://nodejs.org/)
 - [Ollama](https://ollama.com/download)
 
-## Setup 🔨
+## Quick Install ⚡
+
+```sh
+sh -c "$(curl -sS https://raw.githubusercontent.com/LeonhardTissen/discordAIChars/master/install.sh)"
+```
+
+## Manual Setup 🔨
 
 1. Clone the repository
 
