@@ -10,22 +10,28 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 
 ![Requirements Section](github/requirements.png)
 
+You need the following software to run the bot:
+
 - [Node.js](https://nodejs.org/)
 - [Ollama](https://ollama.com/download)
 
 ![Quick Install Section](github/quickinstall.png)
 
-Linux/macOS:
+Doing this will clone the repository, install the dependencies, and create a `.env` file automatically, then run the bot.
+
+If you want to do it manually, follow the `Manual Setup Section` below.
+
+## Linux/macOS:
 
 ```sh
 sh -c "$(curl -sS https://raw.githubusercontent.com/LeonhardTissen/discordAIChars/master/installer/install.sh)"
 ```
 
-Windows:
+## Windows:
 
 - [Run this batch file](https://raw.githubusercontent.com/LeonhardTissen/discordAIChars/master/installer/install.bat)
 
-![Manual Install Section](github/manualinstall.png)
+![Manual Setup Section](github/manualsetup.png)
 
 1. Clone the repository
 
@@ -45,7 +51,7 @@ cd discordAIChars
 npm i
 ```
 
-4. Create a [Discord bot](https://discord.com/developers/applications) and invite it to your server. Make sure it has the `Manage Webhooks` permission and the message intent enabled
+4. Create a [Discord bot](https://discord.com/developers/applications) and invite it to your server. Make sure it has the `Manage Webhooks` permission and all intents enabled
 
 5. Copy `example.env` to `.env` and fill in the required values
 
