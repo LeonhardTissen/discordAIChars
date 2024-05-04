@@ -9,22 +9,20 @@ import { registerCommand } from "../src/registrar.js";
  * @example !basemodel
  */
 async function cmdBasemodel(query, message) {
-	if (query) {
-		if (!isAdmin(message.author.id)) return '### You do not have permission to use this command';
+	if (!query) return `### Base model: [${baseModel}](https://ollama.com/library/${baseModel})`
 
-		const baseModelList = await getBaseModels();
+	if (!isAdmin(message.author.id)) return '### You do not have permission to use this command'
 
-		if (query === 'list') return `### Base models:\n${baseModelList.join('\n')}`
+	const baseModelList = await getBaseModels();
 
-		const newModel = query.trim();
+	if (query === 'list') return `### Base models:\n${baseModelList.join('\n')}`
 
-		if (!baseModelList.includes(newModel)) return `### Model with name "${newModel}" not found`;
+	const newModel = query.trim();
 
-		setBaseModel(newModel);
-		return `### Base model has been set to: [${baseModel}](https://ollama.com/library/${baseModel})`
-	}
+	if (!baseModelList.includes(newModel)) return `### Model with name "${newModel}" not found`
 
-	return `### Base model: [${baseModel}](https://ollama.com/library/${baseModel})`
+	setBaseModel(newModel);
+	return `### Base model has been set to: [${baseModel}](https://ollama.com/library/${baseModel})`
 }
 
 registerCommand('basemodel', cmdBasemodel, 'Other', 'View or modify the current basemodel', '[model? | list?]');
