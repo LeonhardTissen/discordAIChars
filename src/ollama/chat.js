@@ -9,8 +9,7 @@ import { channel } from '../channel.js';
 import { FgBlue, FgCyan, FgYellow } from '../consolecolors.js';
 import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
 import { isForceStopped, resetForceStop } from './forcestop.js';
-
-const { BASE_MODEL } = process.env;
+import { baseModel } from './basemodel.js';
 
 let isGenerating = false;
 
@@ -100,7 +99,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	try {
 		// Initiate the chat with the model
 		const response = await ollama.chat({ 
-			model: BASE_MODEL, 
+			model: baseModel, 
 			messages,
 			stream: true,
 			options: getParameters()
