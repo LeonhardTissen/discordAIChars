@@ -10,6 +10,5 @@ export function setBaseModel(newModel) {
 
 export async function getBaseModels() {
 	const modelObjects = await ollama.list();
-	
-	return modelObjects.models.map(modelObject => modelObject.name.replace(':latest', ''));
+	return modelObjects.models.map(({ name }) => name.replace(':latest', ''));
 }
