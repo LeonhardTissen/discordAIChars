@@ -1,5 +1,5 @@
 import { registerCommand } from "../registrar.js";
-import { getModel } from "../db.js";
+import { getModel, getRandomModel } from "../db.js";
 import { resetDefaultChannelModel, setDefaultChannelModel } from "../ollama/defaultmodel.js";
 
 /**
@@ -15,12 +15,16 @@ async function cmdDefault(idName) {
 		return '### Default model cleared'
 	}
 
-	const modelData = await getModel(idName);
+	const isRandom = idName.toLowerCase() === 'random';
+
+	const modelData = isRandom ? await getRandomModel() : await getModel(idName);
 
 	if (!modelData) return `### Model with name "${idName}" not found`
 
+	const { displayname } = modelData;
+
 	setDefaultChannelModel(idName);
-	return `### Default model set to "${idName}"\nThis means you can talk to this model without running the !ask command.`
+	return `### Default model set to "${displayname}"\nThis means you can talk to this model without running the !ask command.`
 }
 
 registerCommand('default', cmdDefault, 'Interact', 'Set a model as the default model for the channel, or clear the default model', '[name?]');

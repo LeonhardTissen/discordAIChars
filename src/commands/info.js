@@ -1,5 +1,5 @@
 import { registerCommand } from "../registrar.js";
-import { getModel } from "../db.js";
+import { getModel, getRandomModel } from "../db.js";
 import { channel } from "../channel.js";
 
 /**
@@ -11,11 +11,13 @@ import { channel } from "../channel.js";
 async function cmdInfo(idName) {
 	if (!idName) return '### Please specify a model to show info'
 
-	const row = await getModel(idName);
+	const isRandom = idName.toLowerCase() === 'random';
+
+	const modelData = isRandom ? await getRandomModel() : await getModel(idName);
 	
-	if (!row) return `### Model with name "${idName}" not found`
+	if (!modelData) return `### Model with name "${idName}" not found`
 	
-	const { displayname, owner, model, profile } = row;
+	const { displayname, owner, model, profile } = modelData;
 
 	channel.send({
 		content: `### Model info for "${displayname}":
@@ -26,4 +28,4 @@ async function cmdInfo(idName) {
 	return;
 }
 
-registerCommand('info', cmdInfo, 'Browse', 'Show various information about a model', '[name]');
+registerCommand('info', cmdInfo, 'Browse', 'Show various information about a model', '[name | "random"]');
