@@ -20,7 +20,11 @@ try {
 
 // Function to save messages to JSON file
 function saveMessagesToFile() {
-	fs.writeFile(FILE_PATH, JSON.stringify(previousMessages, null, 2));
+	fs.writeFile(FILE_PATH, JSON.stringify(previousMessages, null, 2), 'utf8', (err) => {
+		if (err) {
+			console.error(`${FgRed}Error saving previous messages:${err}`);
+		}
+	});
 }
 
 export function getAllMessages() {
