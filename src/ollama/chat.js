@@ -10,6 +10,7 @@ import { FgBlue, FgCyan, FgYellow } from '../consolecolors.js';
 import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
 import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel } from './basemodel.js';
+import { parseSystemMessage } from './systemmessage.js';
 
 let isGenerating = false;
 let lastResponse = 'Introduce yourself';
@@ -88,10 +89,7 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 	let messages = [];
 
 	// System message
-	messages.push({
-		role: 'system',
-		content: model,
-	});
+	messages.push(... parseSystemMessage(model))
 
 	// Previous messages the AI & user have sent
 	messages = messages.concat(getAllMessagesFrom(lowerIdName));
