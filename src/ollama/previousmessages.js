@@ -1,4 +1,27 @@
+import fs from 'fs';
+import { FgRed } from '../consolecolors.js';
+
+const FILE_PATH = 'previousMessages.json';
+
 let previousMessages = {};
+
+// Load previous messages from JSON file on startup
+try {
+	const data = fs.readFileSync(FILE_PATH);
+	previousMessages = JSON.parse(data);
+} catch (err) {
+	if (err.code === 'ENOENT') {
+		// If the file does not exist, create an empty object
+		fs.writeFileSync(FILE_PATH, JSON.stringify(previousMessages), 'utf8');
+	} else {
+		console.error(`${FgRed}Error loading previous messages:${err}`);
+	}
+}
+
+// Function to save messages to JSON file
+function saveMessagesToFile() {
+	fs.writeFile(FILE_PATH, JSON.stringify(previousMessages, null, 2));
+}
 
 export function getAllMessages() {
 	return previousMessages;
@@ -10,15 +33,18 @@ export function getAllMessagesFrom(modelName) {
 
 export function clearMessagesFrom(modelName) {
 	previousMessages[modelName.toLowerCase()] = [];
+	saveMessagesToFile();
 }
 
 export function clearLastMessagesFrom(modelName, amount) {
 	const lowerModelName = modelName.toLowerCase();
 	previousMessages[lowerModelName] = previousMessages[lowerModelName].slice(0, -amount * 2);
+	saveMessagesToFile();
 }
 
 export function clearAllMessages() {
 	previousMessages = {};
+	saveMessagesToFile();
 }
 
 export function addMessagesTo(modelName, userMessageContent, assistantMessageContent) {
@@ -38,4 +64,5 @@ export function addMessagesTo(modelName, userMessageContent, assistantMessageCon
 	};
 
 	previousMessages[lowerModelName].push(userMessage, assistantMessage);
+	saveMessagesToFile();
 }
