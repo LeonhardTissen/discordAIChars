@@ -1,6 +1,6 @@
 import { registerCommand } from "../registrar.js";
 import { talkToModel } from "../ollama/chat.js";
-import { isForceStopped } from "../ollama/forcestop.js";
+import { isForceStopped, resetForceStop } from "../ollama/forcestop.js";
 
 const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;
 
@@ -27,7 +27,10 @@ async function cmdChain(restOfMessage) {
 	for (const modelName of modelNames) {
 		prompt = await talkToModel(prompt, modelName);
 
-		if (isForceStopped) return '### Chain stopped.';
+		if (isForceStopped) {
+			resetForceStop();
+			return '### Chain stopped.';
+		}
 
 		if (!prompt) return `### Model ${modelName} failed to respond.`;
 	}
