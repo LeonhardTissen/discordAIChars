@@ -10,10 +10,21 @@ Discord AI Chars is a bot that can switch between models and send AI-generated m
 
 ![Requirements Section](github/requirements.png)
 
-You need the following software to run the bot:
+Software:
 
 - [Node.js](https://nodejs.org/)
 - [Ollama](https://ollama.com/download)
+
+Hardware:
+
+For high performance, a GPU is recommended.
+
+(For 8b models like `dolphin-llama3:8b`)
+
+- GPU: Atleast 6GB VRAM
+- CPU: Atleast 16GB of RAM and 4 cores
+
+Please do your own research on the requirements for the models you want to use.
 
 ![Quick Install Section](github/quickinstall.png)
 
@@ -79,4 +90,4 @@ node main
 ![Get Started Section](github/getstarted.png)
 
 1. Type `!create` to start the creation of a new model. The bot will ask you for a name, then a profile picture, then the prompt for the model
-2. Type `!default [name]` to make that model the default for the channel. Now all messages will be responded to by the bot
+2. Type `!default [name]` to make that model the default for the channel. Now the bot will respond to all messages in that channel with that model
