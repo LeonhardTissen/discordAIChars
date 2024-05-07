@@ -1,30 +1,19 @@
-import fs from 'fs';
-import { FgRed } from '../consolecolors.js';
+import { existsJson, loadJson, saveJson } from '../json.js';
 
-const FILE_PATH = 'previousMessages.json';
+const FILE_NAME = 'previousMessages';
 
 let previousMessages = {};
 
 // Load previous messages from JSON file on startup
-try {
-	const data = fs.readFileSync(FILE_PATH);
-	previousMessages = JSON.parse(data);
-} catch (err) {
-	if (err.code === 'ENOENT') {
-		// If the file does not exist, create an empty object
-		fs.writeFileSync(FILE_PATH, JSON.stringify(previousMessages), 'utf8');
-	} else {
-		console.error(`${FgRed}Error loading previous messages:${err}`);
-	}
+if (existsJson(FILE_NAME)) {
+	previousMessages = loadJson(FILE_NAME);
+} else {
+	saveMessagesToFile();
 }
 
 // Function to save messages to JSON file
 function saveMessagesToFile() {
-	fs.writeFile(FILE_PATH, JSON.stringify(previousMessages, null, 2), 'utf8', (err) => {
-		if (err) {
-			console.error(`${FgRed}Error saving previous messages:${err}`);
-		}
-	});
+	saveJson(FILE_NAME, previousMessages);
 }
 
 export function getAllMessages() {

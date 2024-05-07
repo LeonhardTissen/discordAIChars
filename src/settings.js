@@ -73,7 +73,7 @@ export function updateSetting(key, inputString) {
 
 	const value = convertValue(inputString, dataType);
 	settings[key] = value;
-	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
+	fs.writeFileSync(settingsFilePath, JSON.stringify(settings, null, 2));
 	return `Updated ${key} to ${value}`;
 }
 
@@ -117,7 +117,7 @@ function convertValue(inputString, dataType) {
 
 export function resetSettings() {
 	settings = copyDefaultSettings();
-	fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
+	fs.writeFileSync(settingsFilePath, JSON.stringify(settings, null, 2));
 }
 
 export function displaySettings() {

@@ -1,5 +1,4 @@
 import ollama from 'ollama';
-import fs from 'fs';
 
 import { getModel, getRandomModel } from '../db.js';
 import { getParameters, settings } from '../settings.js';
@@ -11,6 +10,7 @@ import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
 import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel } from './basemodel.js';
 import { parseSystemMessage } from './systemmessage.js';
+import { saveJson } from '../json.js';
 
 let isGenerating = false;
 let lastResponse = 'Introduce yourself';
@@ -33,12 +33,12 @@ async function updateWebhookIfNecessary(avatar, displayName) {
 		currentWebhookModel.avatar = avatar;
 
 		// Save webhook info to file
-		fs.writeFileSync('webhook.json', JSON.stringify({
+		saveJson('webhook', {
 			id: webhook.id,
 			token: webhook.token,
 			avatar: avatar,
 			name: displayName,
-		}));
+		});
 	}
 }
 
