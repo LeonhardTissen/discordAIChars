@@ -48,7 +48,7 @@ client.on('messageCreate', async (message) => {
 
 	// Talk to default model
 	if (defaultChannelModel && !isIgnored(message.content)) {
-		talkToModel(message.content, defaultChannelModel);
+		talkToModel(message.content, message, defaultChannelModel);
 	}
 });
 

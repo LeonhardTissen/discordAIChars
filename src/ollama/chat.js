@@ -11,6 +11,7 @@ import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel } from './basemodel.js';
 import { parseSystemMessage } from './systemmessage.js';
 import { WPMCounter } from '../utils/wpmcounter.js';
+import { saveAvatar } from '../avatar.js';
 
 let isGenerating = false;
 let lastResponse = 'Introduce yourself';
@@ -26,10 +27,12 @@ async function getApplicableModel(modelName) {
 	return await getModel(modelName);
 }
 
-async function generateIntoWebhookMessage(messages, webhookMessageId) {
+async function generateIntoWebhookMessage(messages, webhookMessageId, message) {
+	const model = message.attachments.size > 0 ? 'llava-llama3' : baseModel;
+	console.log(model, messages);
 	// Initiate the chat with the model
 	const response = await ollama.chat({ 
-		model: baseModel, 
+		model, 
 		messages,
 		stream: true,
 		options: getParameters()
@@ -66,7 +69,7 @@ async function generateIntoWebhookMessage(messages, webhookMessageId) {
 	return generatedResult;
 }
 
-function formMessageHistory(userInput, systemPrompt, modelName) {
+async function formMessageHistory(userInput, systemPrompt, modelName, message) {
 	const messages = [];
 
 	// System message
@@ -76,15 +79,21 @@ function formMessageHistory(userInput, systemPrompt, modelName) {
 	messages.push(... getAllMessagesFrom(modelName));
 
 	// New message from the user
-	messages.push({
+	const userMessageObject = {
 		role: 'user',
 		content: userInput,
-	});
+	}
+	if (message.attachments && message.attachments.size > 0) {
+		const randomFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		const avatarUrl = await saveAvatar(message.attachments.first(), randomFileName);
+		userMessageObject.images = [avatarUrl];
+	}
+	messages.push(userMessageObject);
 
 	return messages;
 }
 
-export async function talkToModel(userInput, modelName = defaultChannelModel) {
+export async function talkToModel(userInput, message, modelName = defaultChannelModel) {
 	// Prevent any other incoming messages from being processed while generating
 	if (isGenerating && !settings.simultaneous_messages) return;
 
@@ -126,10 +135,10 @@ export async function talkToModel(userInput, modelName = defaultChannelModel) {
 
 	try {
 		// Get the message list to send to the model
-		const messages = formMessageHistory(userInput, model, lowerIdName);
+		const messages = await formMessageHistory(userInput, model, lowerIdName, message);
 
 		// Initiate the chat with the model
-		const generatedResult = await generateIntoWebhookMessage(messages, webhookMessageId);
+		const generatedResult = await generateIntoWebhookMessage(messages, webhookMessageId, message);
 	
 		// Save the messages in the models message history
 		addMessagesTo(lowerIdName, userInput, generatedResult);
