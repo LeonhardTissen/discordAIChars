@@ -32,6 +32,31 @@ async function loadWebhook() {
 	console.log(`${FgGreen}Webhook loaded: ${webhook.id}`);
 }
 
+export async function updateWebhookIfNecessary(avatar, displayName) {
+	// The current webhook is already what we want, no need to update
+	if (
+		displayName === currentWebhookModel.displayName &&
+		avatar === currentWebhookModel.avatar 
+	) return;
+
+	// Update webhook
+	await webhook.edit({
+		name: displayName,
+		avatar: avatar,
+	});
+
+	currentWebhookModel.displayName = displayName;
+	currentWebhookModel.avatar = avatar;
+
+	// Save webhook info to file
+	saveJson('webhook', {
+		id: webhook.id,
+		token: webhook.token,
+		avatar: avatar,
+		name: displayName,
+	});
+}
+
 export async function getOrCreateWebhook() {
 	if (existsJson(webhookFileName)) {
 		loadWebhook();
