@@ -1,7 +1,7 @@
 import 'dotenv/config'
 
 import { client } from './client.js';
-import { isIgnored } from './ignore.js';
+import { isIgnored } from './utils/ignore.js';
 import { talkToModel } from './ollama/chat.js';
 import { channel } from './channel.js';
 import { hasPendingMessage, processPendingMessages } from './pending.js';

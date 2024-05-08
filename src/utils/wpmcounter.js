@@ -11,7 +11,8 @@ export class WPMCounter {
 
 	wordsPerMinute(generatedResult) {
 		const timeToGenerate = this.totalTimeToGenerate();
-		return Math.round((generatedResult.split(' ').length / timeToGenerate) * 60);
+		const wordCount = generatedResult.split(' ').length;
+		return Math.round((wordCount / timeToGenerate) * 60);
 	}
 
 	logTimeAndWPM(generatedResult) {
