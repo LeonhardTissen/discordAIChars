@@ -1,7 +1,7 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { setChannel } from './channel.js';
 import { getOrCreateWebhook } from './webhook.js';
-import { FgGreen } from './consolecolors.js';
+import { FgGreen } from './utils/consolecolors.js';
 
 const { PREFIX, CHANNEL_ID } = process.env;
 

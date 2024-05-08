@@ -1,5 +1,5 @@
 import { registerCommand } from "../registrar.js";
-import { FgWhite } from "../consolecolors.js";
+import { FgWhite } from "../utils/consolecolors.js";
 import { getAllMessages } from "../ollama/previousmessages.js";
 
 /**

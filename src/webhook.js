@@ -1,7 +1,7 @@
 import { WebhookClient } from 'discord.js';
 import { channel } from './channel.js';
-import { FgGreen } from './consolecolors.js';
-import { existsJson, loadJson, saveJson } from './json.js';
+import { FgGreen } from './utils/consolecolors.js';
+import { existsJson, loadJson, saveJson } from './utils/json.js';
 
 export let webhook = null
 export let currentWebhookModel = {

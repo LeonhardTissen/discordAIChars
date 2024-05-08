@@ -2,7 +2,7 @@
 import cluster from 'cluster'
 
 import { startBot } from './src/bot.js'
-import { FgRed } from './src/consolecolors.js';
+import { FgRed } from './src/utils/consolecolors.js';
 
 if (cluster.isPrimary) {
     cluster.fork();

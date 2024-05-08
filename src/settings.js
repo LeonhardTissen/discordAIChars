@@ -1,4 +1,4 @@
-import { format } from "./formatter.js";
+import { format } from "./utils/formatter.js";
 import fs from 'fs';
 
 const defaultSettings = {

@@ -1,4 +1,4 @@
-import { FgBlue } from "../consolecolors.js";
+import { FgBlue } from "../utils/consolecolors.js";
 
 export class WPMCounter {
 	constructor() {

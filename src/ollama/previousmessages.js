@@ -1,4 +1,4 @@
-import { existsJson, loadJson, saveJson } from '../json.js';
+import { existsJson, loadJson, saveJson } from '../utils/json.js';
 
 const FILE_NAME = 'previousMessages';
 
