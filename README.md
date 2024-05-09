@@ -1,6 +1,6 @@
 ![Header Image of Discord AI Chars](github/headerwide.png)
 
-Discord AI Chars is a bot that can switch between models and send AI-generated messages via webhooks. It uses the Ollama library to generate the AI responses. Users in your server have the ability to create and customize their characters and even have them talk to each other.
+Discord AI Chars is a bot that can switch between models and send AI-generated messages via webhooks. It uses the Ollama library to generate the AI responses. Users in your server have the ability to create and customize their characters and even have them talk to each other. With a multimodal model like LLaVA, the bot can also describe images that users send.
 
 ![Preview GIF of using the bot](github/showcase.gif)
 
@@ -69,11 +69,13 @@ npm i
 ```env
 BOT_TOKEN=YourBotTokenHere
 CHANNEL_ID=YourChannelIdHere
+ADMIN_ID=YourDiscordUserIdHere
+
 BASE_MODEL=dolphin-llama3
 IMAGE_RECOGNITION_MODEL=llava-llama3:8b-v1.1-q4_0
+
 PREFIX=!
 MAXIMUM_MODEL_CHAIN=5
-ADMIN_ID=YourDiscordUserIdHere
 ```
 
 6. Download the models of your choice from [Ollama](https://ollama.com/library), for example:
