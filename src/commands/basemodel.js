@@ -1,4 +1,4 @@
-import { baseModel, getBaseModels, setBaseModel } from "../ollama/basemodel.js";
+import { baseModel, imageRecognitionModel, getBaseModels, setBaseModel } from "../ollama/basemodel.js";
 import { isAdmin } from "../permissions.js";
 import { registerCommand } from "../registrar.js";
 
@@ -9,7 +9,9 @@ import { registerCommand } from "../registrar.js";
  * @example !basemodel
  */
 async function cmdBasemodel(query, message) {
-	if (!query) return `### Base model: [${baseModel}](https://ollama.com/library/${baseModel})`
+	if (!query) return `### Base model: [${baseModel}](https://ollama.com/library/${baseModel})
+		
+		### Image recognition model: [${imageRecognitionModel}](https://ollama.com/library/${imageRecognitionModel})`
 
 	if (!isAdmin(message.author.id)) return '### You do not have permission to use this command'
 

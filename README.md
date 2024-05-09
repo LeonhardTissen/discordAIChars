@@ -70,15 +70,17 @@ npm i
 BOT_TOKEN=YourBotTokenHere
 CHANNEL_ID=YourChannelIdHere
 BASE_MODEL=dolphin-llama3
+IMAGE_RECOGNITION_MODEL=llava-llama3:8b-v1.1-q4_0
 PREFIX=!
 MAXIMUM_MODEL_CHAIN=5
 ADMIN_ID=YourDiscordUserIdHere
 ```
 
-6. Download the model of your choice from [Ollama](https://ollama.com/library), for example:
+6. Download the models of your choice from [Ollama](https://ollama.com/library), for example:
 
 ```sh
 ollama pull dolphin-llama3
+ollama pull llava-llama3:8b-v1.1-q4_0
 ```
 
 7. Run the bot
