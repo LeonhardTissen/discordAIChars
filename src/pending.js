@@ -1,6 +1,5 @@
 import { channel } from "./channel.js";
 import { addModel, getModel } from "./db.js";
-import { formatMessage } from "./utils/formatter.js";
 import { saveImage } from "./utils/imagesave.js";
 
 export let pendingMessages = [];
@@ -78,17 +77,14 @@ export async function processPendingMessages(message) {
 
 	if (content === 'cancel') {
 		clearPendingMessages(author);
-		await channel.send(formatMessage('Canceled interaction'));
-		return;
+		return 'Canceled interaction'
 	}
 
 	if (!pendingMessage) return;
 
 	const callback = stateCallbacks[pendingMessage.state];
-	if (!callback) return;
+	if (!callback) return 'Invalid state'
 
 	const response = await callback({ pendingMessage, content, author, message });
-	if (!response) return;
-
-	channel.send(formatMessage(response));
+	return response;
 }

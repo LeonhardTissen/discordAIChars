@@ -31,7 +31,7 @@ export function format(text) {
  * @param {String} text - Text to format
  * @returns {String} - Formatted text
  */
-export function formatResponse(text) {
+function formatResponseText(text) {
 	if (!text.startsWith('```')) {
 		return '### ' + text;
 	}
@@ -45,10 +45,10 @@ export function formatResponse(text) {
  * @returns {Object} - Message object
  */
 export function formatMessage(text, image = null) {
-	const messageObject = {
-		content: formatResponse(text),
-	};
+	const content = formatResponseText(text);
+	const messageObject = { content };
 	if (image) {
+		// Attach image if provided
 		messageObject.files = [image];
 	}
 	return messageObject;

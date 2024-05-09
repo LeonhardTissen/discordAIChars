@@ -8,7 +8,7 @@ import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
 import './commands/_all.js';
 import { defaultChannelModel } from './ollama/defaultmodel.js';
-import { formatMessage, formatResponse } from './utils/formatter.js';
+import { formatMessage } from './utils/formatter.js';
 
 // Discord bot setup
 const { BOT_TOKEN, PREFIX } = process.env;
@@ -49,7 +49,11 @@ async function checkForProcessableCommands(message) {
 
 async function checkForPendingMessages(message) {
 	if (hasPendingMessage(message.author.id)) {
-		await processPendingMessages(message);
+		const response = await processPendingMessages(message);
+		if (response) {
+			const messageObject = formatMessage(response);
+			channel.send(messageObject);
+		}
 		return true;
 	}
 	return false;
