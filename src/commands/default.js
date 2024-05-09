@@ -15,7 +15,7 @@ async function cmdDefault({ arg1: idName }) {
 		return 'Default model cleared'
 	}
 
-	const modelData = getApplicableModel(idName)
+	const modelData = await getApplicableModel(idName)
 
 	if (!modelData) return `Model with name "${idName}" not found`
 
