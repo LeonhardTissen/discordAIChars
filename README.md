@@ -26,22 +26,6 @@ For high performance, a GPU is recommended.
 
 Please do your own research on the requirements for the models you want to use.
 
-![Quick Install Section](github/quickinstall.png)
-
-Doing this will clone the repository, install the dependencies, and create a `.env` file automatically, then run the bot.
-
-If you want to do it manually, follow the `Manual Setup Section` below.
-
-## Linux/macOS:
-
-```sh
-sh -c "$(curl -sS https://raw.githubusercontent.com/LeonhardTissen/discordAIChars/master/installer/install.sh)"
-```
-
-## Windows:
-
-- [Run this batch file](https://raw.githubusercontent.com/LeonhardTissen/discordAIChars/master/installer/install.bat)
-
 ![Manual Setup Section](github/manualsetup.png)
 
 1. Clone the repository
