@@ -6,7 +6,12 @@ import { FgGreen } from './utils/consolecolors.js';
 const { PREFIX, CHANNEL_ID } = process.env;
 
 export const client = new Client({
-	intents: Object.values(GatewayIntentBits),
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildWebhooks,
+		GatewayIntentBits.MessageContent,
+	],
 	partials: [Partials.Message],
 });
 
