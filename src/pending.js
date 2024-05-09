@@ -1,6 +1,6 @@
-import { saveAvatar } from "./avatar.js";
 import { channel } from "./channel.js";
 import { addModel, getModel } from "./db.js";
+import { saveImage } from "./utils/imagesave.js";
 
 export let pendingMessages = [];
 
@@ -54,7 +54,7 @@ async function pendingEnterPrompt({ pendingMessage, content, author }) {
 	const lowerIdName = idName.toLowerCase();
 
 	// Save avatar to disk
-	const avatarPath = await saveAvatar(attachment, lowerIdName);
+	const avatarPath = await saveImage(attachment.url, lowerIdName, 'avatars');
 
 	// Save model to database
 	addModel(idName, displayName, prompt, author, avatarPath);
