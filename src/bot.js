@@ -6,7 +6,7 @@ import { talkToModel } from './ollama/chat.js';
 import { channel } from './channel.js';
 import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
-import './commands.js';
+import './commands/_all.js';
 import { defaultChannelModel } from './ollama/defaultmodel.js';
 
 // Discord bot setup

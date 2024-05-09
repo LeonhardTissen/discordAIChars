@@ -1,0 +1,16 @@
+import './ask.js';
+import './avatar.js';
+import './basemodel.js';
+import './chain.js';
+import './clear.js';
+import './create.js';
+import './debug.js';
+import './default.js';
+import './delete.js';
+import './help.js';
+import './info.js';
+import './list.js';
+import './prompt.js';
+import './settings.js';
+import './transfer.js';
+import './stop.js';
