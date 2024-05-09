@@ -1,13 +1,12 @@
-import { Message } from "discord.js";
 import { getModel, updateField } from "../db.js";
 import { registerCommand } from "../registrar.js";
 import { canModify } from "../permissions.js";
 
 /**
  * Show or edit the prompt for a model
- * @param {string} arg1 - The name of the model
- * @param {string} messageAfterArg1 - The prompt
- * @param {Message} message - The Discord message
+ * @param {string} arg1: idName - The name of the model
+ * @param {string} messageAfterArg1: prompt - The prompt
+ * @param {string} authorId - The Discord ID of the author
  * @returns {string} - The response message
  * @example !prompt Ben
  * @example !prompt Ben You are ben, a detective in a small town...

@@ -4,7 +4,7 @@ import { channel } from "../channel.js";
 
 /**
  * Show various information about a model.
- * @param {string} idName - The name of the model or "random"
+ * @param {string} arg1: idName - The name of the model or "random"
  * @returns {string} - The response message
  * @example !info Ben
  */

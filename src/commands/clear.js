@@ -4,8 +4,8 @@ import { clearAllMessages, clearLastMessagesFrom, clearMessagesFrom } from "../o
 
 /**
  * Clear chat history for a model
- * @param {string} arg1 - The name of the model or "all"
- * @param {string} arg2 - The number of messages to clear
+ * @param {string} arg1: idName - The name of the model or "all"
+ * @param {string} arg2: amount - The number of messages to clear
  * @returns {string} - The response message
  * @example !clear Ben
  * @example !clear Ben 5
