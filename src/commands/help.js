@@ -3,11 +3,11 @@ import { registerCommand, commands, categoryNames } from "../registrar.js";
 
 /**
  * Display help text.
- * @param {string} searchTerm - The command to get help for 
- * @returns {string} - The response message
+ * @param {string} arg1: searchTerm - The search term
+ * @returns {string} message - The response message
  * @example !help
  */
-function cmdHelp(searchTerm) {
+function cmdHelp({ arg1: searchTerm }) {
 	const helpCategories = {};
 
 	// Group commands together by category

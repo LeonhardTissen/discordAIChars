@@ -4,11 +4,11 @@ import { channel } from "../channel.js";
 
 /**
  * Show various information about a model.
- * @param {string} idName 
+ * @param {string} idName - The name of the model or "random"
  * @returns {string} - The response message
  * @example !info Ben
  */
-async function cmdInfo(idName) {
+async function cmdInfo({ arg1: idName }) {
 	if (!idName) return '### Please specify a model to show info'
 
 	const isRandom = idName.toLowerCase() === 'random';

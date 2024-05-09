@@ -5,12 +5,12 @@ import { canModify } from "../permissions.js";
 
 /**
  * Delete a model, if the model is owned by the user
- * @param {string} idName 
- * @param {Message} message 
+ * @param {string} arg1: idName - The name of the model 
+ * @param {Message} message - The Discord message
  * @returns {string} - The response message
  * @example !delete Ben
  */
-async function cmdDelete(idName, message) {
+async function cmdDelete({ arg1: idName, message }) {
 	if (idName === '') return '### Please specify a model to delete'
 
 	const modelData = await getModel(idName);

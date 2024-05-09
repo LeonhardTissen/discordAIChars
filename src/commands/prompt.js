@@ -5,19 +5,17 @@ import { canModify } from "../permissions.js";
 
 /**
  * Show or edit the prompt for a model
- * @param {string} restOfMessage - The message after the command.
- * @param {Message} message 
+ * @param {string} arg1 - The name of the model
+ * @param {string} messageAfterArg1 - The prompt
+ * @param {Message} message - The Discord message
  * @returns {string} - The response message
  * @example !prompt Ben
  * @example !prompt Ben You are ben, a detective in a small town...
  */
-async function cmdPrompt(restOfMessage, message) {
-	const [idName, ...prompt] = restOfMessage.split(' ');
-
+async function cmdPrompt({ arg1: idName, messageAfterArg1: prompt, authorId }) {
 	if (!idName) return '### Please specify a model to show or edit the prompt'
 
-	const promptString = prompt.join(' ');
-	if (!promptString) {
+	if (!prompt) {
 		const modelData = await getModel(idName);
 
 		if (!modelData) return `### Model with name "${idName}" not found`
@@ -32,10 +30,10 @@ async function cmdPrompt(restOfMessage, message) {
 
 	const { owner } = row;
 
-	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
+	if (!canModify(authorId, owner)) return `### You do not own the model with the name "${idName}"`
 
 	try {
-		await updateField(idName, 'model', promptString);
+		await updateField(idName, 'model', prompt);
 		return `### Prompt for model "${idName}" updated`;
 	} catch (error) {
 		return `### Failed to update prompt for model "${idName}": ${error.message}`;

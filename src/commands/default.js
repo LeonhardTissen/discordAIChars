@@ -4,12 +4,12 @@ import { resetDefaultChannelModel, setDefaultChannelModel } from "../ollama/defa
 
 /**
  * Set a model as the default model for the channel, or clear the default model.
- * @param {string} idName 
+ * @param {string} arg1: idName - The name of the model or "random"
  * @returns {string} - The response message
  * @example !default
  * @example !default Ben
  */
-async function cmdDefault(idName) {
+async function cmdDefault({ arg1: idName }) {
 	if (idName === '') {
 		resetDefaultChannelModel();
 		return '### Default model cleared'

@@ -5,14 +5,13 @@ import { canModify } from "../permissions.js";
 
 /**
  * Transfer ownership of a model to another user.
- * @param {string} restOfMessage 
+ * @param {string} idName - The name of the model
+ * @param {string} user - The user to transfer ownership to
  * @param {Message} message 
  * @returns {string} - The response message
  * @example !transfer Ben <@1234567890>
  */
-async function cmdTransfer(restOfMessage, message) {
-	let [idName, user] = restOfMessage.split(' ');
-
+async function cmdTransfer({ arg1: idName, arg2: user }) {
 	if (!idName || !user) return '### Please specify a model and a user to transfer ownership'
 
 	// Remove non-numeric characters from user

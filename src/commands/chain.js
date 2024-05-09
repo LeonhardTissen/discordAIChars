@@ -7,10 +7,11 @@ const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;
 /**
  * Chain multiple models together, feeding the output of one model to the next.
  * @param {string} restOfMessage - The rest of the message after the command
+ * @param {Message} message - The Discord message
  * @returns {string} - The response message
  * @example !chain [Ben, Jerry, Ben] Say hello to Jerry
  */
-async function cmdChain(restOfMessage, message) {
+async function cmdChain({ restOfMessage, message }) {
 	const firstBracketIndex = restOfMessage.indexOf('[');
 	const lastBracketIndex = restOfMessage.indexOf(']');
 	const bracketContent = restOfMessage.substring(firstBracketIndex + 1, lastBracketIndex);

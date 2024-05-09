@@ -13,22 +13,29 @@ import { defaultChannelModel } from './ollama/defaultmodel.js';
 const { BOT_TOKEN, PREFIX } = process.env;
 
 function extractMessageParts(message) {
-	if (!message.content.startsWith(PREFIX)) return { command: null, restOfMessage: null };
+	const { content, author, attachments } = message;
+	if (!content.startsWith(PREFIX)) return { command: null, restOfMessage: null };
 
-	const command = message.content.split(' ')[0].replace(PREFIX, '');
-	const restOfMessage = message.content.replace(PREFIX + command, '').trim();
-	return { command, restOfMessage };
+	const command = content.split(' ')[0].replace(PREFIX, '');
+	const restOfMessage = content.replace(PREFIX + command, '').trim();
+	const args = restOfMessage.split(' ');
+	const [ arg1, arg2 ] = args;
+	const messageAfterArg1 = args.slice(1).join(' ');
+	const messageAfterArg2 = args.slice(2).join(' ');
+	const authorId = author.id;
+	return { command, restOfMessage, arg1, arg2, messageAfterArg1, messageAfterArg2, authorId, message, attachments };
 }
 
 async function checkForProcessableCommands(message) {
-	const { command, restOfMessage } = extractMessageParts(message);
+	const parts = extractMessageParts(message);
+	const { command } = parts;
 	if (!command) return false; // Not a command
 
 	const callback = getCallbackByCommand(command);
 	if (!callback) return false; // No matching command found
 
 	// Callback may send a response back, which should be sent to the channel
-	const response = await callback(restOfMessage, message);
+	const response = await callback(parts);
 	if (response) channel.send(response);
 
 	return true;

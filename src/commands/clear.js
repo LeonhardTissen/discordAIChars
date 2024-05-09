@@ -4,14 +4,13 @@ import { clearAllMessages, clearLastMessagesFrom, clearMessagesFrom } from "../o
 
 /**
  * Clear chat history for a model
- * @param {string} restOfMessage - The rest of the message after the command
+ * @param {string} arg1 - The name of the model or "all"
+ * @param {string} arg2 - The number of messages to clear
  * @returns {string} - The response message
  * @example !clear Ben
  * @example !clear Ben 5
  */
-async function cmdClear(restOfMessage) {
-	const [idName, amount] = restOfMessage.split(' ');
-
+async function cmdClear({ arg1: idName, arg2: amount }) {
 	if (idName === 'all') {
 		clearAllMessages();
 		return '### Chat history for all models cleared';

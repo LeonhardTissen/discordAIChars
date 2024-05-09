@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import { getModel, updateField } from "../db.js";
 import { registerCommand } from "../registrar.js";
 import { canModify } from "../permissions.js";
@@ -7,12 +6,13 @@ import { saveImage } from "../utils/imagesave.js";
 
 /**
  * Change the avatar of a model, if the model is owned by the user
- * @param {string} restOfMessage 
- * @param {Message} message 
+ * @param {string} arg1: idName - The name of the model
+ * @param {string} authorId - The Discord ID of the author
+ * @param {Object[]} attachments - The attachments of the message
  * @returns {string} - The response message
  * @example !avatar Ben
  */
-async function cmdAvatar(idName, message) {
+async function cmdAvatar({ arg1: idName, authorId, attachments }) {
 	if (!idName) return '### Please specify a model'
 
 	const modelData = await getModel(idName);
@@ -22,7 +22,7 @@ async function cmdAvatar(idName, message) {
 	const { owner, profile } = modelData;
 
 	// New avatar not provided, return current avatar
-	if (message.attachments.size === 0) {
+	if (attachments.size === 0) {
 		channel.send({
 			content: `### Avatar for model "${idName}":`,
 			files: [profile]
@@ -33,10 +33,10 @@ async function cmdAvatar(idName, message) {
 	const lowerIdName = idName.toLowerCase();
 
 	// Check if owner
-	if (!canModify(message.author.id, owner)) return `### You do not own the model with the name "${idName}"`
+	if (!canModify(authorId, owner)) return `### You do not own the model with the name "${idName}"`
 
 	// Get attachment
-	const attachment = message.attachments.first();
+	const attachment = attachments.first();
 
 	// Save avatar to disk
 	const avatarPath = await saveImage(attachment.url, lowerIdName, 'avatars');
