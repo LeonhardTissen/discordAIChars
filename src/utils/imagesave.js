@@ -18,7 +18,8 @@ function createDirectoryIfNotExists(directory) {
 }
 
 export async function saveImage(url, imageName, directory) {
-	const imagePath = `${directory}/${imageName}.png`;
+    const extension = url.split('.').pop();
+	const imagePath = `${directory}/${imageName}.${extension}`;
 	const writer = fs.createWriteStream(imagePath);
 
 	createDirectoryIfNotExists(directory);
