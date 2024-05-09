@@ -1,6 +1,6 @@
 import { WebhookClient } from 'discord.js';
 import { channel } from './channel.js';
-import { FgGreen } from './utils/consolecolors.js';
+import { color } from './utils/consolecolors.js';
 import { existsJson, loadJson, saveJson } from './utils/json.js';
 
 export let webhook = null
@@ -18,7 +18,7 @@ async function createWebhook() {
 	
 	saveJson(webhookFileName, { id, token, avatar: null, name });
 
-	console.log(`${FgGreen}Webhook created: ${webhook.id}`);
+	console.log(`${color.Green}Webhook created: ${webhook.id}`);
 }
 
 async function loadWebhook() {
@@ -29,7 +29,7 @@ async function loadWebhook() {
 	currentWebhookModel.displayName = displayName;
 	currentWebhookModel.avatar = avatar;
 
-	console.log(`${FgGreen}Webhook loaded: ${webhook.id}`);
+	console.log(`${color.Green}Webhook loaded: ${webhook.id}`);
 }
 
 export async function updateWebhookIfNecessary(avatar, displayName) {

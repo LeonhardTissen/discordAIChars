@@ -1,4 +1,4 @@
-import { FgBlue } from "../utils/consolecolors.js";
+import { color } from "../utils/consolecolors.js";
 
 export class WPMCounter {
 	constructor() {
@@ -19,6 +19,6 @@ export class WPMCounter {
 		const timeToGenerate = this.totalTimeToGenerate();
 		const wordsPerMinute = this.wordsPerMinute(generatedResult);
 
-		console.log(`${FgBlue}Time to generate: ${timeToGenerate}s, Words per minute: ${wordsPerMinute}`);
+		console.log(`${color.Blue}Time to generate: ${timeToGenerate}s, Words per minute: ${wordsPerMinute}`);
 	}
 }

@@ -1,11 +1,11 @@
 import ollama from 'ollama';
 
-import { getApplicableModel, getModel, getRandomModel } from '../db.js';
+import { getApplicableModel } from '../db.js';
 import { getParameters, settings } from '../settings.js';
 import { updateWebhookIfNecessary, webhook } from '../webhook.js';
 import { filterOutput } from '../utils/filter.js';
 import { channel } from '../channel.js';
-import { FgCyan, FgYellow } from '../utils/consolecolors.js';
+import { color } from '../utils/consolecolors.js';
 import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
 import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel, imageRecognitionModel } from './basemodel.js';
@@ -134,8 +134,8 @@ export async function talkToModel(userInput, message, modelName = defaultChannel
 	}
 
 	// Log the prompt
-	console.log(`${FgCyan}User: ${userInput}`);
-	process.stdout.write(`${FgYellow}${displayname}: `);
+	console.log(`${color.Cyan}User: ${userInput}`);
+	process.stdout.write(`${color.Yellow}${displayname}: `);
 
 	try {
 		// Check if the message has an image

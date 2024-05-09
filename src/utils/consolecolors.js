@@ -1,9 +1,17 @@
-export const FgBlack = "\x1b[30m"
-export const FgRed = "\x1b[31m"
-export const FgGreen = "\x1b[32m"
-export const FgYellow = "\x1b[33m"
-export const FgBlue = "\x1b[34m"
-export const FgMagenta = "\x1b[35m"
-export const FgCyan = "\x1b[36m"
-export const FgWhite = "\x1b[37m"
-export const FgGray = "\x1b[90m"
+const colorCodes = {
+	Black: 30,
+	Red: 31,
+	Green: 32,
+	Yellow: 33,
+	Blue: 34,
+	Magenta: 35,
+	Cyan: 36,
+	White: 37,
+	Gray: 90
+}
+
+export const color = {}
+
+for (const [name, code] of Object.entries(colorCodes)) {
+	color[name] = `\x1b[${code}m`
+}

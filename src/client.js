@@ -1,7 +1,7 @@
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { setChannel } from './channel.js';
 import { getOrCreateWebhook } from './webhook.js';
-import { FgGreen } from './utils/consolecolors.js';
+import { color } from './utils/consolecolors.js';
 
 const { PREFIX, CHANNEL_ID } = process.env;
 
@@ -16,7 +16,7 @@ export const client = new Client({
 });
 
 client.once('ready', async () => {
-    console.log(`${FgGreen}Bot is online!`);
+    console.log(`${color.Green}Bot is online!`);
 
 	setChannel(client.channels.cache.get(CHANNEL_ID));
 	await getOrCreateWebhook();
