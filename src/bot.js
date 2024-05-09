@@ -20,7 +20,7 @@ function extractMessageParts(message) {
 	return { command, restOfMessage };
 }
 
-function checkForProcessableCommands(message) {
+async function checkForProcessableCommands(message) {
 	const { command, restOfMessage } = extractMessageParts(message);
 	if (!command) return false; // Not a command
 
@@ -28,15 +28,15 @@ function checkForProcessableCommands(message) {
 	if (!callback) return false; // No matching command found
 
 	// Callback may send a response back, which should be sent to the channel
-	const response = callback(restOfMessage, message);
+	const response = await callback(restOfMessage, message);
 	if (response) channel.send(response);
 
 	return true;
 }
 
-function checkForPendingMessages(message) {
+async function checkForPendingMessages(message) {
 	if (hasPendingMessage(message.author.id)) {
-		processPendingMessages(message);
+		await processPendingMessages(message);
 		return true;
 	}
 	return false;
@@ -51,7 +51,7 @@ function isInvalidCommand(message) {
 	return false;
 }
 
-function talkToDefaultModel(message) {
+async function talkToDefaultModel(message) {
 	if (defaultChannelModel && !isIgnored(message.content)) {
 		talkToModel(message.content, message, defaultChannelModel);
 		return true;
@@ -66,13 +66,13 @@ client.on('messageCreate', async (message) => {
 	// Prevent bot from responding to messages in other channels
 	if (message.channel !== channel) return;
 
-	if (checkForProcessableCommands(message)) return;
+	if (await checkForProcessableCommands(message)) return;
 
-	if (checkForPendingMessages(message)) return;
+	if (await checkForPendingMessages(message)) return;
 
 	if (isInvalidCommand(message)) return;
 
-	if (talkToDefaultModel(message)) return;
+	if (await talkToDefaultModel(message)) return;
 });
 
 export function startBot() {
