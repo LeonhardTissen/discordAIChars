@@ -1,5 +1,5 @@
 import { registerCommand } from "../registrar.js";
-import { getModel, getRandomModel } from "../db.js";
+import { getApplicableModel } from "../db.js";
 
 /**
  * Show various information about a model.
@@ -10,9 +10,7 @@ import { getModel, getRandomModel } from "../db.js";
 async function cmdInfo({ arg1: idName }) {
 	if (!idName) return 'Please specify a model to show info'
 
-	const isRandom = idName.toLowerCase() === 'random';
-
-	const modelData = isRandom ? await getRandomModel() : await getModel(idName);
+	const modelData = await getApplicableModel(idName);
 	
 	if (!modelData) return `Model with name "${idName}" not found`
 	

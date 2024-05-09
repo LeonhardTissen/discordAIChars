@@ -1,6 +1,6 @@
 import ollama from 'ollama';
 
-import { getModel, getRandomModel } from '../db.js';
+import { getApplicableModel, getModel, getRandomModel } from '../db.js';
 import { getParameters, settings } from '../settings.js';
 import { updateWebhookIfNecessary, webhook } from '../webhook.js';
 import { filterOutput } from '../utils/filter.js';
@@ -18,14 +18,6 @@ let lastResponse = 'Introduce yourself';
 
 const messageUpdateInterval = 1000; // in ms
 const messageCursor = '▌';
-
-async function getApplicableModel(modelName) {
-	if (modelName.toLowerCase() === 'random') {
-		return await getRandomModel();
-	}
-
-	return await getModel(modelName);
-}
 
 async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage = false) {
 	const model = hasImage ? imageRecognitionModel : baseModel;

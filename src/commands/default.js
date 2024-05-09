@@ -1,5 +1,5 @@
 import { registerCommand } from "../registrar.js";
-import { getModel, getRandomModel } from "../db.js";
+import { getApplicableModel } from "../db.js";
 import { resetDefaultChannelModel, setDefaultChannelModel } from "../ollama/defaultmodel.js";
 
 /**
@@ -15,9 +15,7 @@ async function cmdDefault({ arg1: idName }) {
 		return 'Default model cleared'
 	}
 
-	const isRandom = idName.toLowerCase() === 'random';
-
-	const modelData = isRandom ? await getRandomModel() : await getModel(idName);
+	const modelData = getApplicableModel(idName)
 
 	if (!modelData) return `Model with name "${idName}" not found`
 

@@ -53,3 +53,11 @@ export async function deleteModel(idName) {
 export async function addModel(idName, displayName, prompt, owner, profile) {
 	return runQuery('run', 'INSERT INTO models (idname, displayname, model, owner, profile) VALUES (?, ?, ?, ?, ?)', [idName, displayName, prompt, owner, profile]);
 }
+
+export async function getApplicableModel(idName) {
+	if (idName.toLowerCase() === 'random') {
+		return await getRandomModel();
+	}
+
+	return await getModel(idName);
+}
