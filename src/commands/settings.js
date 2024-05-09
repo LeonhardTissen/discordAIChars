@@ -18,12 +18,12 @@ async function cmdSettings({ arg1: key, arg2: value }) {
 
 	if (value === 'reset') {
 		resetSettings();
-		return '### Settings reset to default'
+		return 'Settings reset to default'
 	}
 
 	// Update setting may fail if the key or value is invalid, always display the response
 	const response = updateSetting(key, value);
-	return `### ${response}`
+	return response
 }
 
 registerCommand('settings', cmdSettings, 'Settings', 'Display or update model settings', '[key] [value] | "reset"');

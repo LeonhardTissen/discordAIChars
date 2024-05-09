@@ -10,7 +10,7 @@ import { registerCommand } from "../registrar.js";
 async function cmdList({ authorId }) {
 	const modelDataArr = await getAllModels();
 
-	if (!modelDataArr.length) return '### No models found';
+	if (!modelDataArr.length) return 'No models found';
 
 	const yourModels = [];
 	const otherModels = [];
@@ -23,7 +23,7 @@ async function cmdList({ authorId }) {
 		}
 	}
 
-	return `### Your Models:\n${yourModels.join(', ')}\n### Other Models:\n${otherModels.join(', ')}`;
+	return `Your Models:\n${yourModels.join(', ')}\n### Other Models:\n${otherModels.join(', ')}`;
 }
 
 registerCommand('list', cmdList, 'Browse', 'Show a list of all available models, separated by whether the user owns them or not');

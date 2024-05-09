@@ -8,6 +8,7 @@ import { hasPendingMessage, processPendingMessages } from './pending.js';
 import { getCallbackByCommand } from './registrar.js';
 import './commands/_all.js';
 import { defaultChannelModel } from './ollama/defaultmodel.js';
+import { formatResponse } from './utils/formatter.js';
 
 // Discord bot setup
 const { BOT_TOKEN, PREFIX } = process.env;
@@ -26,6 +27,19 @@ function extractMessageParts(message) {
 	return { command, restOfMessage, arg1, arg2, messageAfterArg1, messageAfterArg2, authorId, message, attachments };
 }
 
+function sendMessage(responseObject) {
+	const [ responseText, responseAttachment ] = responseObject;
+
+	const formattedResponse = formatResponse(responseText);
+	const messageObject = {
+		content: formattedResponse
+	}
+	if (responseAttachment) {
+		messageObject.files = [responseAttachment];
+	}
+	channel.send(messageObject);
+}
+
 async function checkForProcessableCommands(message) {
 	const parts = extractMessageParts(message);
 	const { command } = parts;
@@ -36,7 +50,10 @@ async function checkForProcessableCommands(message) {
 
 	// Callback may send a response back, which should be sent to the channel
 	const response = await callback(parts);
-	if (response) channel.send(response);
+	if (response) {
+		const responseObject = typeof response === 'string' ? [ response, null ] : response;
+		sendMessage(responseObject);
+	}
 
 	return true;
 }

@@ -8,7 +8,7 @@ import { registerCommand } from "../registrar.js";
  */
 function cmdStop() {
 	forceStop();
-	return `### Stopped current generation`;
+	return `Stopped current generation`;
 }
 
 registerCommand('stop', cmdStop, 'Interact', 'Stop current generation');

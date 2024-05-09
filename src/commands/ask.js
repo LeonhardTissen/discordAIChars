@@ -11,9 +11,9 @@ import { talkToModel } from "../ollama/chat.js";
  * 
  */
 function cmdAsk({ arg1: idName, messageAfterArg1: promptString, message }) {
-	if (!idName) return '### Please provide a name for the model.';
+	if (!idName) return 'Please provide a name for the model.';
 
-	if (!promptString) return '### Please provide a prompt for the model to answer.';
+	if (!promptString) return 'Please provide a prompt for the model to answer.';
 
 	talkToModel(promptString, message, idName);
 }

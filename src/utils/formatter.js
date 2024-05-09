@@ -12,11 +12,28 @@ const codeMappings = {
 	'$x': '[2;30m', // Gray
 }
 
+/**
+ * Format text containing color codes and prefix
+ * @param {String} text - Text to format
+ * @returns {String} - Formatted text
+ */
 export function format(text) {
 	// Replace all color codes with actual color codes
 	for (const [key, value] of Object.entries(codeMappings)) {
 		text = text.replaceAll(key, value);
 	}
 	text = `\`\`\`ansi\n${text}\`\`\``;
+	return text;
+}
+
+/**
+ * Format response text
+ * @param {String} text - Text to format
+ * @returns {String} - Formatted text
+ */
+export function formatResponse(text) {
+	if (!text.startsWith('```')) {
+		return '### ' + text;
+	}
 	return text;
 }

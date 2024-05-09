@@ -27,7 +27,7 @@ function cmdHelp({ arg1: searchTerm }) {
 
 	// No commands found
 	if (Object.keys(helpCategories).length === 0) {
-		return '### No commands found';
+		return 'No commands found';
 	}
 
 	let helpText = Object.entries(helpCategories).map(([category, commands]) => {

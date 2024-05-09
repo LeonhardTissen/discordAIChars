@@ -18,9 +18,9 @@ async function cmdChain({ restOfMessage, message }) {
 
 	const modelNames = bracketContent.split(',').map(modelName => modelName.trim());
 
-	if (modelNames.length === 0) return '### No models specified.';
+	if (modelNames.length === 0) return 'No models specified.';
 
-	if (modelNames.length > maximumModelChain) return `### You can only chain up to ${maximumModelChain} models.`;
+	if (modelNames.length > maximumModelChain) return `You can only chain up to ${maximumModelChain} models.`;
 
 	// First prompt is by the user
 	let prompt = restOfMessage.substring(lastBracketIndex + 1).trim();
@@ -30,10 +30,10 @@ async function cmdChain({ restOfMessage, message }) {
 
 		if (isForceStopped) {
 			resetForceStop();
-			return '### Chain stopped.';
+			return 'Chain stopped.';
 		}
 
-		if (!prompt) return `### Model ${modelName} failed to respond.`;
+		if (!prompt) return `Model ${modelName} failed to respond.`;
 	}
 }
 
