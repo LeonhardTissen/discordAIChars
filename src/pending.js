@@ -39,7 +39,13 @@ async function pendingEnterAvatar({ pendingMessage, message }) {
 	// Check if valid URL
 	if (message.attachments.size === 0) return 'Upload an image';
 
-	pendingMessage.data.attachment = message.attachments.first();
+	// Check if png, jpg, jpeg or webp
+	const attachment = message.attachments.first();
+	const validExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+	const extension = attachment.url.split('.').pop();
+	if (!validExtensions.includes(extension)) return 'Avatar must be a PNG, JPG, JPEG or WEBP image';
+
+	pendingMessage.data.attachment = attachment;
 	pendingMessage.state = 'enter_prompt';
 	return 'Enter prompt:';
 }
