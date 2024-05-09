@@ -62,7 +62,8 @@ async function checkForPendingMessages(message) {
 function isInvalidCommand(message) {
 	if (message.content.startsWith(PREFIX)) {
 		// Default response for invalid commands
-		message.channel.send('### Invalid command, use `!help` for a list of commands');
+		const messageObject = formatMessage('Invalid command, use `!help` for a list of commands');
+		channel.send(messageObject);
 		return true;
 	}
 	return false;

@@ -41,7 +41,7 @@ function formatResponseText(text) {
 /**
  * Format response text
  * @param {String} text - Text to format
- * @param {Object} image - Image path to attach
+ * @param {String} image - Image path to attach
  * @returns {Object} - Message object
  */
 export function formatMessage(text, image = null) {

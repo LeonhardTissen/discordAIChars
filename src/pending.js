@@ -1,4 +1,3 @@
-import { channel } from "./channel.js";
 import { addModel, getModel } from "./db.js";
 import { saveImage } from "./utils/imagesave.js";
 
@@ -28,11 +27,12 @@ async function pendingEnterName({ pendingMessage, content }) {
 
 	pendingMessage.data.displayName = content;
 	pendingMessage.data.idName = content.replace(/\s/g, '');
+	let addedInfo = '';
 	if (content.includes(' ')) {
-		await channel.send(`Name sanitized to "${pendingMessage.data.idName}" but still displayed as "${pendingMessage.data.displayName}"`);
+		addedInfo += `\nInfo: Name sanitized to "${pendingMessage.data.idName}" but still displayed as "${pendingMessage.data.displayName}"`;
 	}
 	pendingMessage.state = 'enter_avatar';
-	return 'Upload avatar as attachment:';
+	return 'Upload avatar as attachment:' + addedInfo;
 }
 
 async function pendingEnterAvatar({ pendingMessage, message }) {
