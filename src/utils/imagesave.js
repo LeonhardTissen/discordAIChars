@@ -24,9 +24,9 @@ export async function saveImage(url, imageName, directory) {
 	createDirectoryIfNotExists(directory);
 
 	try {
-        const response = await downloadImage(url);
+        const imageData = await downloadImage(url);
 
-        response.data.pipe(writer);
+        imageData.pipe(writer);
 
         await new Promise((resolve, reject) => {
             writer.on('finish', resolve);
@@ -42,7 +42,7 @@ export async function saveImage(url, imageName, directory) {
         if (fs.existsSync(imagePath)) {
             fs.unlinkSync(imagePath);
         }
-		
+
         throw new Error('Failed to save image');
     } finally {
         // Ensure the writer is closed and cleaned up
