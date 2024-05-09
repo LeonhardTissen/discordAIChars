@@ -3,6 +3,7 @@ import ollama from 'ollama';
 const { BASE_MODEL } = process.env;
 
 export let baseModel = BASE_MODEL;
+export const imageRecognitionModel = 'llava-llama3';
 
 export function setBaseModel(newModel) {
 	baseModel = newModel;

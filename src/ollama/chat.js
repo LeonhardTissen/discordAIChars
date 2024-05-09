@@ -8,10 +8,10 @@ import { channel } from '../channel.js';
 import { FgCyan, FgYellow } from '../utils/consolecolors.js';
 import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
 import { isForceStopped, resetForceStop } from './forcestop.js';
-import { baseModel } from './basemodel.js';
+import { baseModel, imageRecognitionModel } from './basemodel.js';
 import { parseSystemMessage } from './systemmessage.js';
 import { WPMCounter } from '../utils/wpmcounter.js';
-import { saveAvatar } from '../avatar.js';
+import { saveImage } from '../utils/imagesave.js';
 
 let isGenerating = false;
 let lastResponse = 'Introduce yourself';
@@ -27,9 +27,9 @@ async function getApplicableModel(modelName) {
 	return await getModel(modelName);
 }
 
-async function generateIntoWebhookMessage(messages, webhookMessageId, message) {
-	const model = message.attachments.size > 0 ? 'llava-llama3' : baseModel;
-	console.log(model, messages);
+async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage = false) {
+	const model = hasImage ? imageRecognitionModel : baseModel;
+
 	// Initiate the chat with the model
 	const response = await ollama.chat({ 
 		model, 
@@ -69,7 +69,7 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, message) {
 	return generatedResult;
 }
 
-async function formMessageHistory(userInput, systemPrompt, modelName, message) {
+async function formMessageHistory(userInput, systemPrompt, modelName, imagePath = null) {
 	const messages = [];
 
 	// System message
@@ -83,14 +83,24 @@ async function formMessageHistory(userInput, systemPrompt, modelName, message) {
 		role: 'user',
 		content: userInput,
 	}
-	if (message.attachments && message.attachments.size > 0) {
-		const randomFileName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-		const avatarUrl = await saveAvatar(message.attachments.first(), randomFileName);
-		userMessageObject.images = [avatarUrl];
+	if (imagePath) {
+		userMessageObject.images = [imagePath];
 	}
 	messages.push(userMessageObject);
 
 	return messages;
+}
+
+async function getImageFromMessage(message) {
+	const hasAttachments = message.attachments && message.attachments.size > 0;
+
+	if (!hasAttachments) return { hasImage: false, imagePath: null };
+
+	const attachment = message.attachments.first();
+
+	const imagePath = await saveImage(attachment.url, attachment.id, 'images');
+
+	return { hasImage: true, imagePath };
 }
 
 export async function talkToModel(userInput, message, modelName = defaultChannelModel) {
@@ -134,11 +144,14 @@ export async function talkToModel(userInput, message, modelName = defaultChannel
 	process.stdout.write(`${FgYellow}${displayname}: `);
 
 	try {
+		// Check if the message has an image
+		const { hasImage, imagePath } = await getImageFromMessage(message);
+
 		// Get the message list to send to the model
-		const messages = await formMessageHistory(userInput, model, lowerIdName, message);
+		const messages = await formMessageHistory(userInput, model, lowerIdName, imagePath);
 
 		// Initiate the chat with the model
-		const generatedResult = await generateIntoWebhookMessage(messages, webhookMessageId, message);
+		const generatedResult = await generateIntoWebhookMessage(messages, webhookMessageId, hasImage);
 	
 		// Save the messages in the models message history
 		addMessagesTo(lowerIdName, userInput, generatedResult);
