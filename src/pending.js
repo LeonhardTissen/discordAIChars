@@ -35,12 +35,12 @@ async function pendingEnterName({ pendingMessage, content }) {
 	return 'Upload avatar as attachment:' + addedInfo;
 }
 
-async function pendingEnterAvatar({ pendingMessage, message }) {
+async function pendingEnterAvatar({ pendingMessage, attachments }) {
 	// Check if valid URL
-	if (message.attachments.size === 0) return 'Upload an image';
+	if (attachments.size === 0) return 'Upload an image';
 
 	// Check if png, jpg, jpeg or webp
-	const attachment = message.attachments.first();
+	const attachment = attachments.first();
 	const validExtensions = ['png', 'jpg', 'jpeg', 'webp'];
 	const extension = attachment.url.split('.').pop();
 	if (!validExtensions.includes(extension)) return 'Avatar must be a PNG, JPG, JPEG or WEBP image';
@@ -50,7 +50,7 @@ async function pendingEnterAvatar({ pendingMessage, message }) {
 	return 'Enter prompt:';
 }
 
-async function pendingEnterPrompt({ pendingMessage, content, author }) {
+async function pendingEnterPrompt({ pendingMessage, content, authorId }) {
 	if (content.length < 32) return 'Prompt must be at least 32 characters long';
 
 	pendingMessage.data.prompt = content;
@@ -63,9 +63,9 @@ async function pendingEnterPrompt({ pendingMessage, content, author }) {
 	const avatarPath = await saveImage(attachment.url, lowerIdName, 'avatars');
 
 	// Save model to database
-	addModel(idName, displayName, prompt, author, avatarPath);
+	addModel(idName, displayName, prompt, authorId, avatarPath);
 	
-	clearPendingMessages(author);
+	clearPendingMessages(authorId);
 
 	return `Model "${pendingMessage.data.displayName}" created`;
 }
@@ -77,9 +77,9 @@ const stateCallbacks = {
 };
 
 export async function processPendingMessages(message) {
-	const author = message.author.id;
-	const content = message.content;
-	const pendingMessage = pendingMessages.find(m => m.user === author);
+	const { content, attachments, author } = message;
+	const authorId = author.id;
+	const pendingMessage = pendingMessages.find(m => m.user === authorId);
 
 	if (content === 'cancel') {
 		clearPendingMessages(author);
@@ -91,6 +91,6 @@ export async function processPendingMessages(message) {
 	const callback = stateCallbacks[pendingMessage.state];
 	if (!callback) return 'Invalid state'
 
-	const response = await callback({ pendingMessage, content, author, message });
+	const response = await callback({ pendingMessage, content, authorId, message, attachments });
 	return response;
 }

@@ -66,9 +66,7 @@ if (fs.existsSync(settingsFilePath)) {
 }
 
 export function updateSetting(key, inputString) {
-	const dataType = settingDataTypes[key];
-	const bounds = settingBounds[key];
-	const errorMessage = validateInput(key, inputString, dataType, bounds);
+	const errorMessage = validateInput(key, inputString);
 	if (errorMessage) return errorMessage;
 
 	const value = convertValue(inputString, dataType);
@@ -77,7 +75,10 @@ export function updateSetting(key, inputString) {
 	return `Updated ${key} to ${value}`;
 }
 
-function validateInput(key, inputString, dataType, bounds) {
+function validateInput(key, inputString) {
+	const bounds = settingBounds[key];
+	const dataType = settingDataTypes[key];
+
 	if (!dataType) return `Invalid setting: ${key}`;
 	
 	if (dataType === 'float' && isNaN(parseFloat(inputString))) {
