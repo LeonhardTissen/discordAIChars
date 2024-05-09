@@ -37,3 +37,19 @@ export function formatResponse(text) {
 	}
 	return text;
 }
+
+/**
+ * Format response text
+ * @param {String} text - Text to format
+ * @param {Object} image - Image path to attach
+ * @returns {Object} - Message object
+ */
+export function formatMessage(text, image = null) {
+	const messageObject = {
+		content: formatResponse(text),
+	};
+	if (image) {
+		messageObject.files = [image];
+	}
+	return messageObject;
+}
