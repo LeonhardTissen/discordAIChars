@@ -39,7 +39,7 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage =
 	});
 	let generatedResult = '';
 
-	// Update the webhook message with the model's responses every second
+	// Update the webhook message with the model's responses at a set interval
 	const interval = setInterval(() => {
 		// Don't cause any updates if nothing has been generated yet
 		if (!generatedResult) return;
@@ -49,7 +49,7 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage =
 		});
 	}, messageUpdateInterval);
 
-	// Update the final result with the model's responses
+	// Continously update the result as new tokens get generated
 	for await (const part of response) {
 		if (!part.message?.content) continue;
 
@@ -60,8 +60,10 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage =
 		if (isForceStopped) break;
 	}
 
+	// Generation has finished, clear the interval
 	clearInterval(interval);
 
+	// Update the webhook message one last time with the final result (without the cursor)
 	await webhook.editMessage(webhookMessageId, { content: filterOutput(generatedResult) });
 
 	process.stdout.write('\n');
