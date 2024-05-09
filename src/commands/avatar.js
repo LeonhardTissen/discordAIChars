@@ -2,8 +2,8 @@ import { Message } from "discord.js";
 import { getModel, updateField } from "../db.js";
 import { registerCommand } from "../registrar.js";
 import { canModify } from "../permissions.js";
-import { saveAvatar } from "../avatar.js";
 import { channel } from "../channel.js";
+import { saveImage } from "../utils/imagesave.js";
 
 /**
  * Change the avatar of a model, if the model is owned by the user
@@ -39,7 +39,7 @@ async function cmdAvatar(idName, message) {
 	const attachment = message.attachments.first();
 
 	// Save avatar to disk
-	const avatarPath = await saveAvatar(attachment, lowerIdName);
+	const avatarPath = await saveImage(attachment.url, lowerIdName, 'avatars');
 
 	// Edit avatar
 	try {

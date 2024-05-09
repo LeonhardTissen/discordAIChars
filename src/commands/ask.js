@@ -8,7 +8,7 @@ import { talkToModel } from "../ollama/chat.js";
  * @example !ask Ben How are you?
  * 
  */
-function cmdAsk(restOfMessage) {
+function cmdAsk(restOfMessage, message) {
 	const [idName, ...prompt] = restOfMessage.split(' ');
 	const promptString = prompt.join(' ');
 
@@ -16,7 +16,7 @@ function cmdAsk(restOfMessage) {
 
 	if (!promptString) return '### Please provide a prompt for the model to answer.';
 
-	talkToModel(promptString, idName);
+	talkToModel(promptString, message, idName);
 }
 
 registerCommand('ask', cmdAsk, 'Interact', 'Ask the model a question directly', '[name | "random"] [prompt | "last"]');

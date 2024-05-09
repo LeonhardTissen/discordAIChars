@@ -10,7 +10,7 @@ const maximumModelChain = process.env.MAXIMUM_MODEL_CHAIN || 5;
  * @returns {string} - The response message
  * @example !chain [Ben, Jerry, Ben] Say hello to Jerry
  */
-async function cmdChain(restOfMessage) {
+async function cmdChain(restOfMessage, message) {
 	const firstBracketIndex = restOfMessage.indexOf('[');
 	const lastBracketIndex = restOfMessage.indexOf(']');
 	const bracketContent = restOfMessage.substring(firstBracketIndex + 1, lastBracketIndex);
@@ -25,7 +25,7 @@ async function cmdChain(restOfMessage) {
 	let prompt = restOfMessage.substring(lastBracketIndex + 1).trim();
 
 	for (const modelName of modelNames) {
-		prompt = await talkToModel(prompt, modelName);
+		prompt = await talkToModel(prompt, message, modelName);
 
 		if (isForceStopped) {
 			resetForceStop();
