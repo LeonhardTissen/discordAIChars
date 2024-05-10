@@ -7,7 +7,6 @@ import { filterOutput } from '../utils/filter.js';
 import { channel } from '../channel.js';
 import { color } from '../utils/consolecolors.js';
 import { addMessagesTo, getAllMessagesFrom } from './previousmessages.js';
-import { isForceStopped, resetForceStop } from './forcestop.js';
 import { baseModel, imageRecognitionModel } from './basemodel.js';
 import { parseSystemMessage } from './systemmessage.js';
 import { WPMCounter } from '../utils/wpmcounter.js';
@@ -22,45 +21,59 @@ const messageCursor = '▌';
 async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage = false) {
 	const model = hasImage ? imageRecognitionModel : baseModel;
 
-	// Initiate the chat with the model
-	const response = await ollama.chat({ 
-		model, 
-		messages,
-		stream: true,
-		options: getParameters()
-	});
 	let generatedResult = '';
+	let lastMessageInWebhook = '';
 
-	// Update the webhook message with the model's responses at a set interval
-	const interval = setInterval(() => {
-		// Don't cause any updates if nothing has been generated yet
-		if (!generatedResult) return;
+	// Interval for updating the webhook message with the model's responses as they come in
+	let updateInterval;
 
-		webhook.editMessage(webhookMessageId, { 
-			content: filterOutput(generatedResult) + messageCursor,
+	// Flag will be set to true if the generation was successful
+	let generatedSuccessfully = false;
+
+	try {
+		// Initiate the chat with the model
+		const response = await ollama.chat({ 
+			model, 
+			messages,
+			stream: true,
+			options: getParameters()
 		});
-	}, messageUpdateInterval);
+	
+		// Update the webhook message with the model's responses at a set interval
+		updateInterval = setInterval(() => {
+			// Don't cause any updates if nothing has been generated yet
+			if (!generatedResult) return;
+	
+			// Don't update the webhook if the last message is the same as the current one
+			if (lastMessageInWebhook === generatedResult) return;
+	
+			lastMessageInWebhook = generatedResult;
+	
+			webhook.editMessage(webhookMessageId, { 
+				content: filterOutput(generatedResult) + messageCursor,
+			});
+		}, messageUpdateInterval);
+	
+		// Continously update the result as new tokens get generated
+		for await (const part of response) {
+			if (!part.message?.content) continue;
+	
+			generatedResult += part.message.content;
+	
+			process.stdout.write(part.message.content);
+		}
 
-	// Continously update the result as new tokens get generated
-	for await (const part of response) {
-		if (!part.message?.content) continue;
-
-		generatedResult += part.message.content;
-
-		process.stdout.write(part.message.content);
-
-		if (isForceStopped) break;
-	}
+		generatedSuccessfully = true;
+	} catch (err) {}
 
 	// Generation has finished, clear the interval
-	clearInterval(interval);
+	clearInterval(updateInterval);
 
 	// Update the webhook message one last time with the final result (without the cursor)
 	await webhook.editMessage(webhookMessageId, { content: filterOutput(generatedResult) });
 
-	process.stdout.write('\n');
-
-	return generatedResult;
+	// Return the generated result if successful
+	return generatedSuccessfully ? generatedResult : null;
 }
 
 async function formMessageHistory(userInput, systemPrompt, modelName, imagePath = null) {
@@ -122,8 +135,6 @@ export async function talkToModel(userInput, message, modelName = defaultChannel
 
 	const wpmCounter = new WPMCounter();
 
-	resetForceStop();
-
 	// Initialize webhook message for editing during generation
 	const webhookMessage = await webhook.send(messageCursor);
 	const webhookMessageId = webhookMessage.id;
@@ -146,6 +157,12 @@ export async function talkToModel(userInput, message, modelName = defaultChannel
 
 		// Initiate the chat with the model
 		const generatedResult = await generateIntoWebhookMessage(messages, webhookMessageId, hasImage);
+
+		// If the generation failed, return
+		if (!generatedResult) {
+			isGenerating = false;
+			return;
+		}
 	
 		// Save the messages in the models message history
 		addMessagesTo(lowerIdName, userInput, generatedResult);
@@ -159,8 +176,8 @@ export async function talkToModel(userInput, message, modelName = defaultChannel
 
 		return generatedResult;
 	} catch (err) {
-		console.error(err);
-		await channel.send(`### ${modelName} tragically died while generating a response.\n\n\`${err.message}\``);
+		console.error(`\n${color.Red}Error: ${err.message}`);
+		
 		isGenerating = false;
 	}
 }

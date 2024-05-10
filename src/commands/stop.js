@@ -1,4 +1,4 @@
-import { forceStop } from "../ollama/forcestop.js";
+import ollama from "ollama";
 import { registerCommand } from "../registrar.js";
 
 /**
@@ -7,7 +7,7 @@ import { registerCommand } from "../registrar.js";
  * @example !stop
  */
 function cmdStop() {
-	forceStop();
+	ollama.abort();
 	return `Stopped current generation`;
 }
 
