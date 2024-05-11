@@ -69,6 +69,7 @@ export function updateSetting(key, inputString) {
 	const errorMessage = validateInput(key, inputString);
 	if (errorMessage) return errorMessage;
 
+	const dataType = settingDataTypes[key];
 	const value = convertValue(inputString, dataType);
 	settings[key] = value;
 	fs.writeFileSync(settingsFilePath, JSON.stringify(settings, null, 2));

@@ -22,7 +22,6 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage =
 	const model = hasImage ? imageRecognitionModel : baseModel;
 
 	let generatedResult = '';
-	let lastMessageInWebhook = '';
 
 	// Interval for updating the webhook message with the model's responses as they come in
 	let updateInterval;
@@ -40,6 +39,7 @@ async function generateIntoWebhookMessage(messages, webhookMessageId, hasImage =
 		});
 	
 		// Update the webhook message with the model's responses at a set interval
+		let lastMessageInWebhook = '';
 		updateInterval = setInterval(() => {
 			// Don't cause any updates if nothing has been generated yet
 			if (!generatedResult) return;
