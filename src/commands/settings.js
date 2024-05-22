@@ -16,7 +16,7 @@ async function cmdSettings({ arg1: key, arg2: value }) {
 		return displaySettings()
 	}
 
-	if (value === 'reset') {
+	if (key === 'reset') {
 		resetSettings();
 		return 'Settings reset to default'
 	}

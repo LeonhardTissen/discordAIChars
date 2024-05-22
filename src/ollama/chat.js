@@ -82,8 +82,10 @@ async function formMessageHistory(userInput, systemPrompt, modelName, imagePath 
 	// System message
 	messages.push(... parseSystemMessage(systemPrompt))
 
-	// Previous messages the AI & user have sent
-	messages.push(... getAllMessagesFrom(modelName));
+	if (!imagePath) {
+		// Previous messages the AI & user have sent
+		messages.push(... getAllMessagesFrom(modelName));
+	}
 
 	// New message from the user
 	const userMessageObject = {
