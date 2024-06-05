@@ -8,7 +8,7 @@ export function setBaseModel(newModel) {
 	baseModel = newModel;
 }
 
-export const imageRecognitionModel = IMAGE_RECOGNITION_MODEL || 'llava-llama3:8b-v1.1-q4_0';
+export let imageRecognitionModel = IMAGE_RECOGNITION_MODEL || 'llava-llama3:8b-v1.1-q4_0';
 
 export function setImageRecognitionModel(newModel) {
 	imageRecognitionModel = newModel;
