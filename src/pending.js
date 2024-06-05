@@ -42,7 +42,7 @@ async function pendingEnterAvatar({ pendingMessage, attachments }) {
 	// Check if png, jpg, jpeg or webp
 	const attachment = attachments.first();
 	const validExtensions = ['png', 'jpg', 'jpeg', 'webp'];
-	const extension = attachment.url.split('.').pop().split(/\#|\?/)[0];
+	const extension = attachment.name.split('.').pop().toLowerCase();
 	if (!validExtensions.includes(extension)) return 'Avatar must be a PNG, JPG, JPEG or WEBP image';
 
 	pendingMessage.data.attachment = attachment;
